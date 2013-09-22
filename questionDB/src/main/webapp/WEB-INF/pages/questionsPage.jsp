@@ -11,7 +11,7 @@
 </head>
 
 <body>
-	<h3>${subject} Questions</h3>
+	<h3>${subject_string} Questions</h3>
 	<p>${message}</p>
 	<p>Click <a href="<c:url value='/configuration/'/>">here</a> to go to the configurations page</p>
 	<c:url var="addQ" value="/questions/${subject}/addQuestion" />

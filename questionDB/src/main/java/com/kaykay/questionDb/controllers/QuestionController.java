@@ -118,7 +118,8 @@ public class QuestionController {
 		else if(subject.equals("C")){
 			subject_string = "Chemistry";
 		}
-		model.addAttribute("subject", subject_string);
+		model.addAttribute("subject",subject);
+		model.addAttribute("subject_string", subject_string);
 		model.addAttribute("QUESTION", new Question(subject));
 		model.addAttribute("message", "Please enter the details of the question below");
 		model.addAttribute("TOPIC_LIST", topicService.getTopicsList());
@@ -139,10 +140,23 @@ public class QuestionController {
 		question1.setOption3(question.getOption3());
 		question1.setOption4(question.getOption4());
 		
+		String subject_string = null;
+		
+		if(subject.equals("P")){
+			subject_string = "Physics";
+		}
+		else if(subject.equals("M")){
+			subject_string = "Mathematics";
+		}
+		else if(subject.equals("C")){
+			subject_string = "Chemistry";
+		}
+		
 		
 		questionService.createQuestion(question1);
 		
 		model.addAttribute("subject", subject);
+		model.addAttribute("subject_string", subject_string);
 		model.addAttribute("message", "Successfully saved the question");
 		model.addAttribute("QUESTION", new Question(subject));
 		model.addAttribute("TOPIC_LIST", topicService.getTopicsList());
