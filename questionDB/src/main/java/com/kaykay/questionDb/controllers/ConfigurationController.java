@@ -1,11 +1,17 @@
 package com.kaykay.questionDb.controllers;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kaykay.questionDb.domain.Branch;
 import com.kaykay.questionDb.domain.Concept;
@@ -66,6 +72,59 @@ public class ConfigurationController {
 		
 		
 	}
+	
+	
+	@RequestMapping(value="topicList")
+	@ResponseBody
+	public List<String> getTopicsList(){
+		
+		List<Topic>  topicList = topicService.getTopicsList();
+		List<String> topicNameList = new ArrayList<String>();
+		
+		Iterator<Topic> iterator = topicList.iterator();
+		
+		while(iterator.hasNext()){
+			topicNameList.add(iterator.next().getName());
+		}
+		
+		return topicNameList;
+	}
+	
+	
+	@RequestMapping(value="topicListByName")
+	@ResponseBody
+	public List<String> getTopicsListByName(@RequestParam("term") String name){
+		
+		List<Topic>  topicList = topicService.getTopicsbyName(name);
+		List<String> topicNameList = new ArrayList<String>();
+		
+		Iterator<Topic> iterator = topicList.iterator();
+		
+		while(iterator.hasNext()){
+			topicNameList.add(iterator.next().getName());
+		}
+		
+		return topicNameList;
+	}
+	
+	
+	@RequestMapping(value="subTopicListByName")
+	@ResponseBody
+	public List<String> getSubTopicsListByName(@RequestParam("term") String name){
+		
+		List<SubTopic>  subTopicList = subTopicService.getSubTopicsbyName(name);
+		List<String> subTopicNameList = new ArrayList<String>();
+		
+		Iterator<SubTopic> iterator = subTopicList.iterator();
+		
+		while(iterator.hasNext()){
+			subTopicNameList.add(iterator.next().getName());
+		}
+		
+		return subTopicNameList;
+	}
+	
+	
 	
 	@RequestMapping(value="addSubTopic",method=RequestMethod.POST)
 	public String createSubTopic(@ModelAttribute("SUBTOPIC") SubTopic subTopic, ModelMap map){

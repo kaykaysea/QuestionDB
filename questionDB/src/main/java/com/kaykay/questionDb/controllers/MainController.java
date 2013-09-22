@@ -10,11 +10,7 @@ import com.kaykay.questionDb.domain.Question;
 @Controller
 @RequestMapping({"/","home"})
 public class MainController {
-	
-//	@RequestMapping
-//	public String getHomePage(){
-//		return "home";
-//	}
+
 	
 	@RequestMapping
 	public ModelAndView question(){

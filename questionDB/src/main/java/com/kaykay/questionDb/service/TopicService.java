@@ -20,6 +20,11 @@ public class TopicService {
 		return topicRepository.findAll();
 	}
 	
+	public List<Topic> getTopicsbyName(String name){
+		
+		return topicRepository.findByNameLike(name);
+	}
+	
 	public Topic createTopic(Topic topic){
 		
 		topic.setId(UUID.randomUUID().toString());

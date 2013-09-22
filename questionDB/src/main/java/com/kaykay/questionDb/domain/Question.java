@@ -11,6 +11,7 @@ public class Question {
 	
 	@Id
 	private String id;
+	private String subject;
 	private String content;
 	private String topic;
 	private String subTopic;
@@ -25,10 +26,16 @@ public class Question {
 	public Question(){
 		
 	}
+	
+	public Question(String subject){
+		super();
+		this.subject = subject;
+	}
 
-	public Question(String content, String topic,String subTopic, List<String> concepts,String difficulty,
+	public Question(String subject,String content, String topic,String subTopic, List<String> concepts,String difficulty,
 			String option1, String option2, String option3, String option4) {
 		super();
+		this.subject = subject;
 		this.content = content;
 		this.topic = topic;
 		this.subTopic = subTopic;
@@ -46,6 +53,14 @@ public class Question {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 
 	public String getContent() {

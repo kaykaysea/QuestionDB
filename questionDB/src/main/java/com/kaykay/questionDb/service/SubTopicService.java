@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kaykay.questionDb.domain.SubTopic;
+import com.kaykay.questionDb.domain.Topic;
 import com.kaykay.questionDb.repository.SubTopicRepository;
 
 @Service
@@ -21,6 +22,10 @@ public class SubTopicService {
 		
 	}
 	
+	public List<SubTopic> getSubTopicsbyName(String name){
+		
+		return subTopicRepository.findByNameLike(name);
+	}
 	
 	public SubTopic createSubTopic(SubTopic subTopic){
 		

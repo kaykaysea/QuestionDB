@@ -84,10 +84,42 @@ public class QuestionController {
 		return questionService.createQuestion(question);
 	}
 	
-	@RequestMapping(value="createQuestion")
-	public String createQuestion(ModelMap model){
+	@RequestMapping(value="{subject}")
+	public String subjectPage(@PathVariable("subject") String subject, ModelMap model){
+		String subject_string = null;
+		
+		if(subject.equals("P")){
+			subject_string = "Physics";
+		}
+		else if(subject.equals("M")){
+			subject_string = "Mathematics";
+		}
+		else if(subject.equals("C")){
+			subject_string = "Chemistry";
+		}
+		
+		
+		model.addAttribute("subject", subject_string);
+		return "subjectPage";
+	}
 	
-		model.addAttribute("QUESTION", new Question());
+	
+	@RequestMapping(value="{subject}/createQuestion")
+	public String createQuestion(ModelMap model,@PathVariable("subject") String subject){
+		
+		String subject_string = null;
+		
+		if(subject.equals("P")){
+			subject_string = "Physics";
+		}
+		else if(subject.equals("M")){
+			subject_string = "Mathematics";
+		}
+		else if(subject.equals("C")){
+			subject_string = "Chemistry";
+		}
+		model.addAttribute("subject", subject_string);
+		model.addAttribute("QUESTION", new Question(subject));
 		model.addAttribute("message", "Please enter the details of the question below");
 		model.addAttribute("TOPIC_LIST", topicService.getTopicsList());
 		model.addAttribute("SUBTOPIC_LIST", subTopicService.getSubTopicsList());
@@ -95,10 +127,10 @@ public class QuestionController {
 	}
 	
 	
-	@RequestMapping(value="addQuestion",method=RequestMethod.POST)
-	public String addQuestion(@ModelAttribute(value="QUESTION") Question question,ModelMap model ){
+	@RequestMapping(value="{subject}/addQuestion",method=RequestMethod.POST)
+	public String addQuestion(@ModelAttribute(value="QUESTION") Question question,ModelMap model,@PathVariable("subject") String subject ){
 		
-		Question question1 = new Question();
+		Question question1 = new Question(subject);
 		question1.setTopic(question.getTopic());
 		question1.setDifficulty(question.getDifficulty());
 		question1.setContent(question.getContent());
@@ -110,8 +142,9 @@ public class QuestionController {
 		
 		questionService.createQuestion(question1);
 		
+		model.addAttribute("subject", subject);
 		model.addAttribute("message", "Successfully saved the question");
-		model.addAttribute("QUESTION", new Question());
+		model.addAttribute("QUESTION", new Question(subject));
 		model.addAttribute("TOPIC_LIST", topicService.getTopicsList());
 		
 		return "questionsPage";

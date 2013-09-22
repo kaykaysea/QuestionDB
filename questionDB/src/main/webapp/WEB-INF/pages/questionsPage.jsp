@@ -6,16 +6,20 @@
 
 <head>
 	<script type="text/javascript" src='<c:url value="/static/js/ckeditor/ckeditor.js" />'></script>
+	<script type="text/javascript" src='<c:url value="/static/js/jquery.js" />'></script>
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 </head>
 
 <body>
-	<h3>Questions Page</h3>
+	<h3>${subject} Questions</h3>
 	<p>${message}</p>
 	<p>Click <a href="<c:url value='/configuration/'/>">here</a> to go to the configurations page</p>
-	<c:url var="addQ" value="/questions/addQuestion" />
+	<c:url var="addQ" value="/questions/${subject}/addQuestion" />
 	<form:form method="POST" action="${addQ}" modelAttribute="QUESTION">
-		<form:label path="topic">Topic:</form:label><form:select items="${TOPIC_LIST}" itemLabel="name" itemValue="name" path="topic"/>&nbsp;
-		<form:label path="subTopic">Sub Topic:</form:label><form:select items="${SUBTOPIC_LIST}" itemLabel="name" itemValue="name" path="subTopic"/>&nbsp;
+<%-- 		<form:label path="topic">Topic:</form:label><form:select items="${TOPIC_LIST}" itemLabel="name" itemValue="name" path="topic"/>&nbsp; --%>
+		<form:label path="topic">Topic:</form:label><form:input path="topic" id="topic"/>&nbsp;
+<%-- 		<form:label path="subTopic">Sub Topic:</form:label><form:select items="${SUBTOPIC_LIST}" itemLabel="name" itemValue="name" path="subTopic"/>&nbsp; --%>
+		<form:label path="subTopic">Sub topic:</form:label><form:input path="subTopic" id="subTopic"/>&nbsp;
 		<form:label path="difficulty">Difficulty:</form:label><form:select path="difficulty">
 														<form:option value="VERY_EASY" label="Very Easy"/>
 														<form:option value="EASY" label="Easy"/>
@@ -32,7 +36,32 @@
 		<input type="submit" value="Submit"/>
 	
 	</form:form>
+	<script type="text/javascript">
 	
+	$(document).ready(function() {
+		
+		$("#topic").autocomplete({
+			source: '${pageContext. request. contextPath}/configuration/topicListByName',
+			messages: {
+			       noResults: '',
+			       results: function() {}
+				    }
+			
+		});
+		
+		$("#subTopic").autocomplete({
+			source: '${pageContext. request. contextPath}/configuration/subTopicListByName',
+			messages: {
+			       noResults: '',
+			       results: function() {}
+				    }
+			
+		});
+		
+		
+	});
+	
+	</script>
 	
 	<script type="text/javascript">
 		CKEDITOR.replace('content');
