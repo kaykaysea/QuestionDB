@@ -17,11 +17,16 @@ public class Question {
 	private String subTopic;
 	private List<String> concepts;
 	private String difficulty;
+	private String key;
+	private String exam;
+	private String year;
 	
 	private String option1; 
 	private String option2;
 	private String option3;
 	private String option4;
+	private String solution;
+	
 	
 	public Question(){
 		
@@ -103,6 +108,30 @@ public class Question {
 		this.difficulty = difficulty;
 	}
 
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+	public String getExam() {
+		return exam;
+	}
+
+	public void setExam(String exam) {
+		this.exam = exam;
+	}
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
 	public String getOption1() {
 		return option1;
 	}
@@ -136,6 +165,14 @@ public class Question {
 	}
 	
 	
+	public String getSolution() {
+		return solution;
+	}
+
+	public void setSolution(String solution) {
+		this.solution = solution;
+	}
+
 	//TODO append other characters of the question to the toString method
 	public String toString(){
 		

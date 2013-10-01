@@ -84,24 +84,24 @@ public class QuestionController {
 		return questionService.createQuestion(question);
 	}
 	
-	@RequestMapping(value="{subject}")
-	public String subjectPage(@PathVariable("subject") String subject, ModelMap model){
-		String subject_string = null;
-		
-		if(subject.equals("P")){
-			subject_string = "Physics";
-		}
-		else if(subject.equals("M")){
-			subject_string = "Mathematics";
-		}
-		else if(subject.equals("C")){
-			subject_string = "Chemistry";
-		}
-		
-		
-		model.addAttribute("subject", subject_string);
-		return "subjectPage";
-	}
+//	@RequestMapping(value="{subject}")
+//	public String subjectPage(@PathVariable("subject") String subject, ModelMap model){
+//		String subject_string = null;
+//		
+//		if(subject.equals("P")){
+//			subject_string = "Physics";
+//		}
+//		else if(subject.equals("M")){
+//			subject_string = "Mathematics";
+//		}
+//		else if(subject.equals("C")){
+//			subject_string = "Chemistry";
+//		}
+//		
+//		
+//		model.addAttribute("subject", subject_string);
+//		return "subjectPage";
+//	}
 	
 	
 	@RequestMapping(value="{subject}/createQuestion")
@@ -134,11 +134,15 @@ public class QuestionController {
 		Question question1 = new Question(subject);
 		question1.setTopic(question.getTopic());
 		question1.setDifficulty(question.getDifficulty());
+		question1.setKey(question.getKey());
+		question1.setExam(question.getExam());
+		question1.setYear(question.getYear());
 		question1.setContent(question.getContent());
 		question1.setOption1(question.getOption1());
 		question1.setOption2(question.getOption2());
 		question1.setOption3(question.getOption3());
 		question1.setOption4(question.getOption4());
+		question1.setSolution(question.getSolution());
 		
 		String subject_string = null;
 		
