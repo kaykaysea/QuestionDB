@@ -11,6 +11,7 @@
 <link rel="shortcut icon" href="../../assets/ico/favicon.png">
 <script src="<c:url value='/static/js/jquery.js' />"></script>
 <script src="<c:url value='/static/js/typeahead.min.js' />"></script>
+<script src="<c:url value='/static/js/bootstrap-tagsinput.js' />"></script>
 <script type="text/javascript"
 	src='<c:url value="/static/js/ckeditor/ckeditor.js" />'></script>
 <title>Questions Page</title>
@@ -22,6 +23,8 @@
 <link href="<c:url value='/static/css/typeahead-fix.css' />"
 	rel="stylesheet">	
 <link href="<c:url value='/static/css/sticky-footer-navbar.css' />"
+	rel="stylesheet">
+	<link href="<c:url value='/static/css/bootstrap-tagsinput.css' />"
 	rel="stylesheet">
 
 
@@ -86,13 +89,13 @@
 			</div>&nbsp;&nbsp;&nbsp;
 			<div class="form-group">
 				<form:label path="subTopic" class="sr-only">Sub Topic:</form:label>
-				<form:input path="subTopic" class="form-control" id="subTopic"
+				<form:input path="subTopic" class="typeahead form-control" id="subTopic"
 					placeholder="Enter Sub Topic" />
 			</div>
 			&nbsp;&nbsp;&nbsp;
 			<div class="form-group">
-				<form:label path="concepts" class="sr-only">Concepts:</form:label>
-				<form:input path="concepts" class="form-control" id="concepts"
+				<form:label path="conceptsList" class="sr-only" >Concepts:</form:label>
+				<form:input path="conceptsList" class="typeahead form-control" id="concepts" 
 					placeholder="Enter Concepts" />
 			</div>
 			&nbsp;&nbsp;&nbsp;
@@ -110,6 +113,8 @@
 				&nbsp;&nbsp;&nbsp;
 			</div>
 			
+			
+			
 			&nbsp;&nbsp;&nbsp;<b>Key:</b>
 			<div class="form-group">
 				<form:label path="key"></form:label>
@@ -126,14 +131,14 @@
 			<hr>			
 			<div class="form-group">
 				<form:label path="exam" class="sr-only">Exam:</form:label>
-				<form:input path="exam" class="form-control" id="exam"
-					placeholder="Exam" />
+				<form:input path="exam" class="typeahead form-control" id="exam"
+					placeholder="Enter Exam" />
 			</div>
 			&nbsp;&nbsp;&nbsp;
 			
 			<div class="form-group">
 				<form:label path="year" class="sr-only">Year:</form:label>
-				<form:input path="year" class="form-control" id="year"
+				<form:input path="year" class="typeahead form-control" id="year"
 					placeholder="Year" />
 			</div>
 			&nbsp;&nbsp;&nbsp;
@@ -194,10 +199,28 @@
 								remote : '${pageContext. request. contextPath}/configuration/subTopicListByName?term=%QUERY',
 							} );
 						
+							$('#concepts').typeahead( {
+								name : 'concepts',
+								remote : '${pageContext. request. contextPath}/configuration/conceptListByName?term=%QUERY',
+							} );
+						
+							$('#exam').typeahead( {
+								name : 'exams',
+								remote : '${pageContext. request. contextPath}/configuration/examListByName?term=%QUERY',
+							} );
+							
+							var years = [];
+							
+							for (var i = 1970; i <= 2020; i++) {
+								   years.push(i.toString());
+								}
+							
+							$('#year').typeahead( {
+								name : 'year',
+								local: years
+							} );
 							
 							
-							
-			
 						});
 // 		$("#subTopic").focus( function () {
 // 		    //$('#url_title').val('/personal-trainer-directory/'+$(this).val().toLowerCase().replace(/ +/g, '-').trim());

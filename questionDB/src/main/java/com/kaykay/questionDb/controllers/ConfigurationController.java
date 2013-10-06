@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kaykay.questionDb.domain.Branch;
 import com.kaykay.questionDb.domain.Concept;
+import com.kaykay.questionDb.domain.Exam;
 import com.kaykay.questionDb.domain.SubTopic;
 import com.kaykay.questionDb.domain.Topic;
 import com.kaykay.questionDb.repository.TopicRepository;
 import com.kaykay.questionDb.service.ConceptService;
+import com.kaykay.questionDb.service.ExamService;
 import com.kaykay.questionDb.service.SubTopicService;
 import com.kaykay.questionDb.service.TopicService;
 
@@ -35,6 +37,9 @@ public class ConfigurationController {
 	@Autowired
 	ConceptService conceptService;
 	
+	@Autowired
+	ExamService examService;
+	
 	@RequestMapping("/")
 	public String getConfigurationPage(ModelMap map){
 		
@@ -47,6 +52,9 @@ public class ConfigurationController {
 		map.addAttribute("CONCEPT", new Concept());
 		map.addAttribute("CONCEPT_LIST",conceptService.getConceptsList());
 		map.addAttribute("ConceptMessage", "Enter the name of a concept");
+		map.addAttribute("EXAM", new Exam());
+		map.addAttribute("EXAM_LIST",examService.getExamsList());
+		map.addAttribute("ExamMessage", "Enter the name of an exam");
 		
 		return "config";
 	}
@@ -61,12 +69,15 @@ public class ConfigurationController {
 		map.addAttribute("TopicMessage", "Topic saved successfully");
 		map.addAttribute("SubTopicMessage", "Enter the name of a sub topic");
 		map.addAttribute("ConceptMessage", "Enter the name of a concept");
+		map.addAttribute("ExamMessage", "Enter the name of an exam");
 		map.addAttribute("TOPIC_LIST", topicService.getTopicsList());
 		map.addAttribute("SUBTOPIC_LIST", subTopicService.getSubTopicsList());
 		map.addAttribute("CONCEPT_LIST", conceptService.getConceptsList());
+		map.addAttribute("EXAM_LIST", examService.getExamsList());
 		map.addAttribute("TOPIC", new Topic());
 		map.addAttribute("SUBTOPIC", new SubTopic());
 		map.addAttribute("CONCEPT", new Concept());
+		map.addAttribute("EXAM", new Exam());
 		
 		return "config";
 		
@@ -124,6 +135,38 @@ public class ConfigurationController {
 		return subTopicNameList;
 	}
 	
+	@RequestMapping(value="conceptListByName")
+	@ResponseBody
+	public List<String> getConceptsListByName(@RequestParam("term") String name){
+		
+		List<Concept>  conceptList = conceptService.getConceptsbyName(name);
+		List<String> conceptNameList = new ArrayList<String>();
+		
+		Iterator<Concept> iterator = conceptList.iterator();
+		
+		while(iterator.hasNext()){
+			conceptNameList.add(iterator.next().getName());
+		}
+		
+		return conceptNameList;
+	}
+	
+	@RequestMapping(value="examListByName")
+	@ResponseBody
+	public List<String> getExamsListByName(@RequestParam("term") String name){
+		
+		List<Exam>  examList = examService.getExamsbyName(name);
+		List<String> examNameList = new ArrayList<String>();
+		
+		Iterator<Exam> iterator = examList.iterator();
+		
+		while(iterator.hasNext()){
+			examNameList.add(iterator.next().getName());
+		}
+		
+		return examNameList;
+	}
+	
 	
 	
 	@RequestMapping(value="addSubTopic",method=RequestMethod.POST)
@@ -136,12 +179,15 @@ public class ConfigurationController {
 		map.addAttribute("TopicMessage", "Enter the name of a topic");
 		map.addAttribute("SubTopicMessage", "Sub Topic saved successfully");
 		map.addAttribute("ConceptMessage", "Enter the name of a concept");
+		map.addAttribute("ExamMessage", "Enter the name of an exam");
 		map.addAttribute("TOPIC_LIST", topicService.getTopicsList());
 		map.addAttribute("SUBTOPIC_LIST", subTopicService.getSubTopicsList());
 		map.addAttribute("CONCEPT_LIST", conceptService.getConceptsList());
+		map.addAttribute("EXAM_LIST", examService.getExamsList());
 		map.addAttribute("TOPIC", new Topic());
 		map.addAttribute("SUBTOPIC", new SubTopic());
 		map.addAttribute("CONCEPT", new Concept());
+		map.addAttribute("EXAM", new Exam());
 		
 		return "config";
 		
@@ -150,7 +196,7 @@ public class ConfigurationController {
 	
 	
 	@RequestMapping(value="addConcept",method=RequestMethod.POST)
-	public String createSubTopic(@ModelAttribute("CONCEPT") Concept concept, ModelMap map){
+	public String createConcept(@ModelAttribute("CONCEPT") Concept concept, ModelMap map){
 				
 		Concept concept1 = new Concept();
 		concept1.setName(concept.getName());
@@ -159,12 +205,40 @@ public class ConfigurationController {
 		map.addAttribute("TopicMessage", "Enter the name of a topic");
 		map.addAttribute("SubTopicMessage", "Enter the name of a sub topic");
 		map.addAttribute("ConceptMessage", "Concept saved successfully");
+		map.addAttribute("ExamMessage", "Enter the name of an exam");
 		map.addAttribute("TOPIC_LIST", topicService.getTopicsList());
 		map.addAttribute("SUBTOPIC_LIST", subTopicService.getSubTopicsList());
 		map.addAttribute("CONCEPT_LIST", conceptService.getConceptsList());
+		map.addAttribute("EXAM_LIST", examService.getExamsList());
 		map.addAttribute("TOPIC", new Topic());
 		map.addAttribute("SUBTOPIC", new SubTopic());
 		map.addAttribute("CONCEPT", new Concept());
+		map.addAttribute("EXAM", new Exam());
+		
+		return "config";
+		
+		
+	}
+	
+	@RequestMapping(value="addExam",method=RequestMethod.POST)
+	public String createExam(@ModelAttribute("EXAM") Exam exam, ModelMap map){
+				
+		Exam exam1 = new Exam();
+		exam1.setName(exam.getName());
+		examService.createExam(exam1);
+		
+		map.addAttribute("TopicMessage", "Enter the name of a topic");
+		map.addAttribute("SubTopicMessage", "Enter the name of a sub topic");
+		map.addAttribute("ConceptMessage", "Enter the name of a concept");
+		map.addAttribute("ExamMessage", "Exam saved successfully");
+		map.addAttribute("TOPIC_LIST", topicService.getTopicsList());
+		map.addAttribute("SUBTOPIC_LIST", subTopicService.getSubTopicsList());
+		map.addAttribute("CONCEPT_LIST", conceptService.getConceptsList());
+		map.addAttribute("EXAM_LIST", examService.getExamsList());
+		map.addAttribute("TOPIC", new Topic());
+		map.addAttribute("SUBTOPIC", new SubTopic());
+		map.addAttribute("CONCEPT", new Concept());
+		map.addAttribute("EXAM", new Exam());
 		
 		return "config";
 		

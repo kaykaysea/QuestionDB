@@ -11,11 +11,12 @@
 	<c:url var="addTopic" value="/configuration/addTopic" />
 	<c:url var="addSubTopic" value="/configuration/addSubTopic" />
 	<c:url var="addConcept" value="/configuration/addConcept" />
+	<c:url var="addExam" value="/configuration/addExam" />
 	<p>Click <a href="<c:url value='/questions/createQuestion' />">here</a> to go to the create question Page</p>
 	<hr>
 	
 	<div style="width: 900px;">
-		<div style="width: 290px; float: left;">
+		<div style="width: 200px; float: left;">
 			<form:form action="${addTopic}" modelAttribute="TOPIC">
 				<p>${TopicMessage}</p>
 				<form:label path="name">Topic name:</form:label>
@@ -31,7 +32,7 @@
 			</ol>
 		</div>
 
-		<div style="width: 290px; float: left;">
+		<div style="width: 200px; float: left;">
 			<form:form action="${addSubTopic}" modelAttribute="SUBTOPIC">
 				<p>${SubTopicMessage}</p>
 				<form:label path="name">Subtopic name:</form:label>
@@ -47,7 +48,7 @@
 			</ol>
 		</div>
 
-		<div style="width: 290px; float: left;">
+		<div style="width: 200px; float: left;">
 			<form:form action="${addConcept}" modelAttribute="CONCEPT">
 				<p>${ConceptMessage}</p>
 				<form:label path="name">Concept name:</form:label>
@@ -59,6 +60,24 @@
 			<ol>
 				<c:forEach var="concept" items="${CONCEPT_LIST}">
 					<li>${concept.name}</li>
+				</c:forEach>
+			</ol>
+
+		</div>
+		
+		
+		<div style="width: 200px; float: left;">
+			<form:form action="${addExam}" modelAttribute="EXAM">
+				<p>${ExamMessage}</p>
+				<form:label path="name">Exam name:</form:label>
+				<form:input path="name" />
+				<input type="submit" value="Submit">
+			</form:form>
+			<hr>
+			<p>Available Exams</p>
+			<ol>
+				<c:forEach var="exam" items="${EXAM_LIST}">
+					<li>${exam.name}</li>
 				</c:forEach>
 			</ol>
 

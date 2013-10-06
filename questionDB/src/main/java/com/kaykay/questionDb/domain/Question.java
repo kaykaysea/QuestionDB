@@ -1,5 +1,6 @@
 package com.kaykay.questionDb.domain;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -16,6 +17,7 @@ public class Question {
 	private String topic;
 	private String subTopic;
 	private List<String> concepts;
+	private String conceptsList;
 	private String difficulty;
 	private String key;
 	private String exam;
@@ -37,14 +39,14 @@ public class Question {
 		this.subject = subject;
 	}
 
-	public Question(String subject,String content, String topic,String subTopic, List<String> concepts,String difficulty,
+	public Question(String subject,String content, String topic,String subTopic, String conceptsList,String difficulty,
 			String option1, String option2, String option3, String option4) {
 		super();
 		this.subject = subject;
 		this.content = content;
 		this.topic = topic;
 		this.subTopic = subTopic;
-		this.concepts = concepts;
+		this.concepts = Arrays.asList(conceptsList.split(","));
 		this.difficulty = difficulty;
 		this.option1 = option1;
 		this.option2 = option2;
@@ -98,6 +100,18 @@ public class Question {
 
 	public void setConcepts(List<String> concepts) {
 		this.concepts = concepts;
+	}
+	
+	public void setConcepts(String conceptsList){
+		this.concepts = Arrays.asList(conceptsList.split(","));
+	}
+	
+	public String getConceptsList() {
+		return conceptsList;
+	}
+
+	public void setConceptsList(String conceptsList) {
+		this.conceptsList = conceptsList;
 	}
 
 	public String getDifficulty() {

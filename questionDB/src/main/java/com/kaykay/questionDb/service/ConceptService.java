@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kaykay.questionDb.domain.Concept;
+import com.kaykay.questionDb.domain.SubTopic;
 import com.kaykay.questionDb.repository.ConceptRepository;
 
 @Service
@@ -19,6 +20,11 @@ public class ConceptService {
 		
 		return conceptRepository.findAll();
 		
+	}
+	
+	public List<Concept> getConceptsbyName(String name){
+		
+		return conceptRepository.findByNameLike(name);
 	}
 	
 	

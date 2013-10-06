@@ -74,7 +74,7 @@ public class QuestionController {
 		
 		Question question = new Question();
 		question.setContent(content);
-		question.setConcepts(null);
+		//question.setConcepts(null);
 		question.setTopic(topic);
 		question.setOption1(op1);
 		question.setOption2(op2);
@@ -133,6 +133,9 @@ public class QuestionController {
 		
 		Question question1 = new Question(subject);
 		question1.setTopic(question.getTopic());
+		question1.setSubTopic(question.getSubTopic());
+		question1.setConceptsList(question.getConceptsList());
+		question1.setConcepts(question.getConceptsList());
 		question1.setDifficulty(question.getDifficulty());
 		question1.setKey(question.getKey());
 		question1.setExam(question.getExam());
