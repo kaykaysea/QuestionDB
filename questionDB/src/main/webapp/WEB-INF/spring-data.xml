@@ -17,7 +17,7 @@
 		properties-ref="deployProperties" />
 
 	<!-- Activate Spring Data MongoDB repository support -->
-	<mongo:repositories base-package="com.kaykay.questionDb.repository" />
+	<mongo:repositories base-package="com.kaykay.questionDb" />
 
 	<!-- MongoDB host -->
 	<mongo:mongo host="${mongo.host.name}" port="${mongo.host.port}" />

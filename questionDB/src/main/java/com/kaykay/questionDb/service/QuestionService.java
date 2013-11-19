@@ -39,6 +39,8 @@ public class QuestionService {
 		
 	}
 	
+
+	
 	public Question updateQuestion(Question question){
 		
 		Question existingQuestion = questionRepository.findQuestionById(question.getId());
@@ -48,21 +50,29 @@ public class QuestionService {
 			return null;
 		}
 		
-		existingQuestion.setConcepts(question.getConcepts());
-		existingQuestion.setContent(question.getContent());
-		existingQuestion.setOption1(question.getOption1());
-		existingQuestion.setOption2(question.getOption2());
-		existingQuestion.setOption3(question.getOption3());
-		existingQuestion.setOption4(question.getOption4());
+			
+		return questionRepository.save(question);
 		
-		return questionRepository.save(existingQuestion);
+			
+	}
+	
+	public void deleteQuestionById(String id){
 		
+		Question existingQuestion = questionRepository.findQuestionById(id);
 		
+		if(existingQuestion == null){
+			
+		}
 		
-		
+		else{
+			
+			questionRepository.delete(existingQuestion);
+		}
 		
 		
 	}
+	
+	
 	
 
 }

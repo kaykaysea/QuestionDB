@@ -19,6 +19,7 @@ import com.kaykay.questionDb.domain.Exam;
 import com.kaykay.questionDb.domain.SubTopic;
 import com.kaykay.questionDb.domain.Topic;
 import com.kaykay.questionDb.repository.TopicRepository;
+import com.kaykay.questionDb.service.BranchService;
 import com.kaykay.questionDb.service.ConceptService;
 import com.kaykay.questionDb.service.ExamService;
 import com.kaykay.questionDb.service.SubTopicService;
@@ -39,6 +40,31 @@ public class ConfigurationController {
 	
 	@Autowired
 	ExamService examService;
+	
+	@Autowired
+	BranchService branchService;
+	
+	@RequestMapping("new")
+	public String getConfig(ModelMap map){
+		
+		map.addAttribute("BRANCH", new Branch());
+		
+		
+		return "confignew";
+		
+	}
+	
+	
+	@RequestMapping(value="new/branch",method=RequestMethod.POST)
+	@ResponseBody
+	public Branch submitBranch(Branch branch){
+		
+			
+		return branchService.createBranch(branch);
+		
+	}
+	
+	
 	
 	@RequestMapping("/")
 	public String getConfigurationPage(ModelMap map){

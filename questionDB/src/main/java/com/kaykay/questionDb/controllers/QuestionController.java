@@ -1,5 +1,6 @@
 package com.kaykay.questionDb.controllers;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kaykay.questionDb.domain.Branch;
 import com.kaykay.questionDb.domain.Question;
+import com.kaykay.questionDb.domain.Topic;
+import com.kaykay.questionDb.service.BranchService;
 import com.kaykay.questionDb.service.QuestionService;
 import com.kaykay.questionDb.service.SubTopicService;
 import com.kaykay.questionDb.service.TopicService;
@@ -29,6 +33,9 @@ public class QuestionController {
 	
 	@Autowired
 	SubTopicService subTopicService;
+	
+	@Autowired
+	BranchService branchService;
 
 	@RequestMapping("{id}")
 	@ResponseBody
@@ -36,6 +43,14 @@ public class QuestionController {
 
 		return questionService.getQuestionById(id);
 
+	}
+	
+	@RequestMapping("id/{id}")
+		public String displayQuestionById(){
+		
+		
+		return"questionPage";
+		
 	}
 	
 	
@@ -84,91 +99,90 @@ public class QuestionController {
 		return questionService.createQuestion(question);
 	}
 	
-//	@RequestMapping(value="{subject}")
-//	public String subjectPage(@PathVariable("subject") String subject, ModelMap model){
-//		String subject_string = null;
-//		
-//		if(subject.equals("P")){
-//			subject_string = "Physics";
-//		}
-//		else if(subject.equals("M")){
-//			subject_string = "Mathematics";
-//		}
-//		else if(subject.equals("C")){
-//			subject_string = "Chemistry";
-//		}
-//		
-//		
-//		model.addAttribute("subject", subject_string);
-//		return "subjectPage";
-//	}
 	
+
 	
-	@RequestMapping(value="{subject}/createQuestion")
-	public String createQuestion(ModelMap model,@PathVariable("subject") String subject){
+	@RequestMapping(value="create")
+	public String createQuestion(ModelMap model){
 		
-		String subject_string = null;
-		
-		if(subject.equals("P")){
-			subject_string = "Physics";
-		}
-		else if(subject.equals("M")){
-			subject_string = "Mathematics";
-		}
-		else if(subject.equals("C")){
-			subject_string = "Chemistry";
-		}
-		model.addAttribute("subject",subject);
-		model.addAttribute("subject_string", subject_string);
-		model.addAttribute("QUESTION", new Question(subject));
+
+		model.addAttribute("QUESTION", new Question());
 		model.addAttribute("message", "Please enter the details of the question below");
-		model.addAttribute("TOPIC_LIST", topicService.getTopicsList());
-		model.addAttribute("SUBTOPIC_LIST", subTopicService.getSubTopicsList());
+		
 		return "questionsPage";
+		
 	}
 	
 	
-	@RequestMapping(value="{subject}/addQuestion",method=RequestMethod.POST)
-	public String addQuestion(@ModelAttribute(value="QUESTION") Question question,ModelMap model,@PathVariable("subject") String subject ){
+	
+	
+	
+	@RequestMapping(value="updateQuestion",method=RequestMethod.POST)
+	public String updateQuestion(@ModelAttribute(value="QUESTION") Question question,ModelMap model ){
 		
-		Question question1 = new Question(subject);
-		question1.setTopic(question.getTopic());
-		question1.setSubTopic(question.getSubTopic());
-		question1.setConceptsList(question.getConceptsList());
-		question1.setConcepts(question.getConceptsList());
-		question1.setDifficulty(question.getDifficulty());
-		question1.setKey(question.getKey());
-		question1.setExam(question.getExam());
-		question1.setYear(question.getYear());
-		question1.setContent(question.getContent());
-		question1.setOption1(question.getOption1());
-		question1.setOption2(question.getOption2());
-		question1.setOption3(question.getOption3());
-		question1.setOption4(question.getOption4());
-		question1.setSolution(question.getSolution());
+		question.setContent(question.getContent().replaceAll("<p>|</p>", ""));
+		question.setOption1(question.getOption1().replaceAll("<p>|</p>", ""));
+		question.setOption2(question.getOption2().replaceAll("<p>|</p>", ""));
+		question.setOption3(question.getOption3().replaceAll("<p>|</p>", ""));
+		question.setOption4(question.getOption4().replaceAll("<p>|</p>", ""));
+		question.setSolution(question.getSolution().replaceAll("<p>|</p>", ""));
 		
-		String subject_string = null;
+	
+		questionService.updateQuestion(question);
+		return "questionPage";
+	}
+	
+	
+	@RequestMapping("edit/{id}")
+	public String editQuestionById(@PathVariable("id") String id, ModelMap model){
+		Question existingQuestion = questionService.getQuestionById(id);
+		model.addAttribute("QUESTION", existingQuestion);
+		model.addAttribute("QUESTION_ID", id);
+		List<Topic> topicList = branchService.getTopicsListByBranch("Physics");
+		Collections.sort(topicList);
 		
-		if(subject.equals("P")){
-			subject_string = "Physics";
-		}
-		else if(subject.equals("M")){
-			subject_string = "Mathematics";
-		}
-		else if(subject.equals("C")){
-			subject_string = "Chemistry";
-		}
+		model.addAttribute("TOPIC_LIST", topicList);
+		model.addAttribute("CONTENT", existingQuestion.getContent());
+		model.addAttribute("OPTION1",existingQuestion.getOption1());
+		model.addAttribute("OPTION2",existingQuestion.getOption2());
+		model.addAttribute("OPTION3",existingQuestion.getOption3());
+		model.addAttribute("OPTION4",existingQuestion.getOption4());
+		return "editQuestion";
 		
+	}
+	
+	@RequestMapping("delete/{id}")
+	public String deleteQuestionById(@PathVariable("id") String id, ModelMap model){
+		//Question existingQuestion = questionService.getQuestionById(id);
+		questionService.deleteQuestionById(id);
+		model.addAttribute("QuestionsList",questionService.getAllQuestions());
 		
-		questionService.createQuestion(question1);
+	
+		return "allQuestions";
 		
-		model.addAttribute("subject", subject);
-		model.addAttribute("subject_string", subject_string);
+	}
+	
+	
+	
+	@RequestMapping(value="add",method=RequestMethod.POST)
+	public String addQuestion(@ModelAttribute(value="QUESTION") Question question,ModelMap model){
+		
+		question.setContent(question.getContent().replaceAll("<p>|</p>", ""));
+		question.setOption1(question.getOption1().replaceAll("<p>|</p>", ""));
+		question.setOption2(question.getOption2().replaceAll("<p>|</p>", ""));
+		question.setOption3(question.getOption3().replaceAll("<p>|</p>", ""));
+		question.setOption4(question.getOption4().replaceAll("<p>|</p>", ""));
+		question.setSolution(question.getSolution());
+		
+		questionService.createQuestion(question);
+		
 		model.addAttribute("message", "Successfully saved the question");
-		model.addAttribute("QUESTION", new Question(subject));
-		model.addAttribute("TOPIC_LIST", topicService.getTopicsList());
-		
-		return "questionsPage";
+	
+		return "questionStatus";
 	}
+	
+	
+	
+	
 
 }

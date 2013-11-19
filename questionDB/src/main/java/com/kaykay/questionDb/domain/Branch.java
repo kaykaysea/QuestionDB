@@ -1,5 +1,6 @@
 package com.kaykay.questionDb.domain;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -17,23 +18,12 @@ public class Branch {
 	@Id
 	private String id;
 	private String name;
-	private List<String> topics;
-	private List<String> subTopics;
-	private List<String> concepts;
+	//private List<Topic> topicList;
+	private HashMap<String, Topic> topicList;
 	
-	public Branch(){
-		
-	}
-
-	public Branch(String name, List<String> topics, List<String> subTopics,
-			List<String> concepts) {
-		super();
-		this.name = name;
-		this.topics = topics;
-		this.subTopics = subTopics;
-		this.concepts = concepts;
-	}
-
+	
+	
+			
 	public String getId() {
 		return id;
 	}
@@ -50,29 +40,20 @@ public class Branch {
 		this.name = name;
 	}
 
-	public List<String> getTopics() {
-		return topics;
+	
+	public HashMap<String, Topic> getTopicList() {
+		return topicList;
 	}
 
-	public void setTopics(List<String> topics) {
-		this.topics = topics;
+	public void setTopicList(HashMap<String, Topic> topicList) {
+		this.topicList = topicList;
 	}
 
-	public List<String> getSubTopics() {
-		return subTopics;
-	}
 
-	public void setSubTopics(List<String> subTopics) {
-		this.subTopics = subTopics;
-	}
 
-	public List<String> getConcepts() {
-		return concepts;
-	}
 
-	public void setConcepts(List<String> concepts) {
-		this.concepts = concepts;
-	}
+
+
 	
 	
 

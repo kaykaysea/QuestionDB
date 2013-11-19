@@ -24,6 +24,8 @@
 
 
 <body>
+
+    <!-- Top fixed menu start -->
 	<div class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
 			<div class="navbar-header">
@@ -32,11 +34,11 @@
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">QuesDB</a>
+				<a class="navbar-brand" href="<c:url value='/home'/>">QuesDB</a>
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
-					<li class="active"><a href="#">Home</a></li>
+					<li class="active"><a href="<c:url value='/home'/>">Home</a></li>
 					<li><a href="#about">About</a></li>
 					<li><a href="#contact">Contact</a></li>
 				</ul>
@@ -44,9 +46,11 @@
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
 						data-toggle="dropdown">Questions<b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a href=#>Physics</a></li>
+							<li><a href="<c:url value='/questions/viewAll'/>">Physics</a></li>
 							<li><a href=#>Mathematics</a></li>
-						</ul></li>
+						</ul>
+					</li>
+					<li><a href="<c:url value='/branch/new'/>">Configuration</a></li>
 				</ul>
 
 
@@ -54,6 +58,10 @@
 			<!--/.nav-collapse -->
 		</div>
 	</div>
+	 <!-- Top fixed menu end -->
+	 
+	 
+	 
 	<div class="container"></div>
 	<hr>
 	<div class="container" style="text-align: justify;">
@@ -65,7 +73,7 @@
 				<p></p>
 				<p>
 					<a class="btn btn-primary"
-						href="<c:url value='/questions/P/createQuestion'/>">Create
+						href="<c:url value='/questions/create'/>">Create
 						Questions&raquo;</a><br>
 					<br> <a class="btn btn-primary" href="#">Edit
 						Questions&raquo;</a>

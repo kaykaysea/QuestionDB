@@ -32,6 +32,7 @@
 
 <body>
 
+    <!-- Top fixed menu start -->
 	<div class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
 			<div class="navbar-header">
@@ -40,23 +41,23 @@
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">QuesDB</a>
+				<a class="navbar-brand" href="<c:url value='/home'/>">QuesDB</a>
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
-					<li class="active"><a href="#">Home</a></li>
+					<li class="active"><a href="<c:url value='/home'/>">Home</a></li>
 					<li><a href="#about">About</a></li>
 					<li><a href="#contact">Contact</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="<c:url value='/configuration/'/>">Configuration</a></li>
-
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
 						data-toggle="dropdown">Questions<b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a href=#>Physics</a></li>
+							<li><a href="<c:url value='/questions/viewAll'/>">Physics</a></li>
 							<li><a href=#>Mathematics</a></li>
-						</ul></li>
+						</ul>
+					</li>
+					<li><a href="<c:url value='/branch/new'/>">Configuration</a></li>
 				</ul>
 
 
@@ -78,27 +79,46 @@
 
 	<div class="container ">
 
-		<c:url var="addQ" value="/questions/${subject}/addQuestion" />
-		<form:form method="POST" action="${addQ}" modelAttribute="QUESTION"
-			class="form-inline">
-			<%-- 		<form:label path="topic">Topic:</form:label><form:select items="${TOPIC_LIST}" itemLabel="name" itemValue="name" path="topic"/>&nbsp; --%>
+		<c:url var="addQ" value="/questions/add" />
+		<form:form method="POST" action="${addQ}" modelAttribute="QUESTION" class="form-inline">
+
+			<b>Subject:</b>
 			<div class="form-group">
-				<form:label path="topic" class="sr-only">Topic:</form:label>
-				<form:input path="topic" class="typeahead form-control" id="topic"
-					placeholder="Enter Topic" />
-			</div>&nbsp;&nbsp;&nbsp;
-			<div class="form-group">
-				<form:label path="subTopic" class="sr-only">Sub Topic:</form:label>
-				<form:input path="subTopic" class="typeahead form-control" id="subTopic"
-					placeholder="Enter Sub Topic" />
-			</div>
+				<form:label path="subject"></form:label>
+				<form:select path="subject" id="subject" class="form-control" placeholder="">
+					<form:option value="NONE" label="Select a Subject" />
+					<form:option value="Physics" label="Physics" />
+				</form:select>
 			&nbsp;&nbsp;&nbsp;
-			<div class="form-group">
-				<form:label path="conceptsList" class="sr-only" >Concepts:</form:label>
-				<form:input path="conceptsList" class="typeahead form-control" id="concepts" 
-					placeholder="Enter Concepts" />
 			</div>
+			<br>
+			
+			
+			<b>Topic:</b>
+			<div class="form-group">
+				<form:label path="topic"></form:label>
+				<form:select path="topic" id="topic" class="form-control" placeholder="">
+				</form:select>
 			&nbsp;&nbsp;&nbsp;
+			</div>
+			
+			
+			<b>Sub Topic:</b>
+			<div class="form-group">
+				<form:label path="subTopic"></form:label>
+				<form:select path="subTopic" id="subTopic" class="form-control" >
+   				</form:select>
+			&nbsp;&nbsp;&nbsp;
+			</div>
+			
+			<b>Concept:</b>
+			<div class="form-group">
+				<form:label path="conceptsList"></form:label>
+				<form:select path="conceptsList" id="conceptsList" class="form-control">
+				</form:select>
+			&nbsp;&nbsp;&nbsp;
+			</div>
+
 			
 			<b>Difficulty:</b>
 			<div class="form-group">
@@ -148,29 +168,29 @@
 
 			<br>
 			<br>
-			<form:label path="content">Content:</form:label>
+			<label for="content">Content:</label>
 			<br>
-			<form:textarea path="content" />
+			<textarea id="content" name="content">${CONTENT}</textarea>
 			<br>
-			<form:label path="option1">Option 1:</form:label>
+			<label for="option1">Option 1:</label>
 			<br>
-			<form:textarea path="option1" />
+			<textarea id="option1" name="option1"></textarea>
 			<br>
-			<form:label path="option2">Option 2:</form:label>
+			<label for="option2">Option 2:</label>
 			<br>
-			<form:textarea path="option2" />
+			<textarea id="option2" name="option2"></textarea>
 			<br>
-			<form:label path="option3">Option 3:</form:label>
+			<label for="option3">Option 3:</label>
 			<br>
-			<form:textarea path="option3" />
+			<textarea id="option3" name="option3"></textarea>
 			<br>
-			<form:label path="option4">Option 4:</form:label>
+			<label for="option4">Option 4:</label>
 			<br>
-			<form:textarea path="option4" />
+			<textarea id="option4" name="option4"></textarea>
 			<br>
-			<form:label path="solution">Solution</form:label>
+			<label for="solution">Solution</label>
 			<br>
-			<form:textarea path="solution" />
+			<textarea id="solution" name="solution"></textarea>
 			<br>
 			<input type="submit" value="Submit" />
 
@@ -187,18 +207,89 @@
 		$(document)
 				.ready(
 						function() {
-
-
-							$('#topic').typeahead( {
-								name : 'topics',
-								remote : '${pageContext. request. contextPath}/configuration/topicListByName?term=%QUERY',
-							} );
 							
-							$('#subTopic').typeahead( {
-								name : 'subTopics',
-								remote : '${pageContext. request. contextPath}/configuration/subTopicListByName?term=%QUERY',
-							} );
-						
+							$('#subject').change(function(){
+								var subjectName = $('#subject').val();
+																			
+								$.ajax({
+									url:'${pageContext.request.contextPath}/branch/'+subjectName+'/topics',
+									type:"GET",
+									success:function(response){
+
+										var topicList = '<option value="">Select a topic</option>';
+										for(var i=0;i<response.length;i++){
+											topicList += '<option value="' + response[i].name + '">'+ response[i].name + '</option>';
+														
+										}
+										
+										//subTopicList+='</option>';
+										$('#topic').html(topicList);
+										
+									}
+									
+									
+								});
+								
+								
+								
+							});
+							
+							
+							
+							$('#topic').change(function(){
+								var subjectName = $('#subject').val();
+								var topicName = $('#topic').val();
+								var topicId = topicName.replace(/\s/g,'');
+																											
+								$.ajax({
+									url:'${pageContext.request.contextPath}/branch/'+subjectName+'/'+topicId+'/subTopics',
+									type:"GET",
+									success:function(response){
+																	
+										var subTopicList = '<option value="">Select a sub topic</option>';
+										for(var i=0;i<response.length;i++){
+											subTopicList += '<option value="' + response[i].name + '">'+ response[i].name + '</option>';
+														
+										}
+										
+										$('#subTopic').html(subTopicList);
+										
+									}
+								
+								});
+							
+							});
+							
+							
+							
+							$('#subTopic').change(function(){
+								var subjectName = $('#subject').val();
+								var topicName = $('#topic').val();
+								var topicId = topicName.replace(/\s/g,'');
+								var subTopicName = $('#subTopic').val();
+								var subTopicId = subTopicName.replace(/\s/g,'');
+								
+								$.ajax({
+								url:'${pageContext.request.contextPath}/branch/'+subjectName+'/'+topicId+'/'+subTopicId+'/concepts',
+								type:"GET",
+								success:function(response){
+									var conceptList = '<option value="">Select a concept</option>';
+									for(var i=0;i<response.length;i++){
+										conceptList += '<option value="' + response[i].name + '">'+ response[i].name + '</option>';
+													
+									}
+								
+									$('#conceptsList').html(conceptList);
+									
+									}
+								});
+								
+							
+							
+							
+							});
+							
+							
 							$('#concepts').typeahead( {
 								name : 'concepts',
 								remote : '${pageContext. request. contextPath}/configuration/conceptListByName?term=%QUERY',
@@ -222,10 +313,7 @@
 							
 							
 						});
-// 		$("#subTopic").focus( function () {
-// 		    //$('#url_title').val('/personal-trainer-directory/'+$(this).val().toLowerCase().replace(/ +/g, '-').trim());
-// 		    alert('inside subtopic');
-// 		});
+
 	</script>
 
 	<script type="text/javascript">
