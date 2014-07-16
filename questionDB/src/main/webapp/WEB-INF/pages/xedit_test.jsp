@@ -3,7 +3,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <html lang="en">
-
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,13 +19,13 @@
 	rel="stylesheet">
 <link href="<c:url value='/static/css/sticky-footer-navbar.css' />"
 	rel="stylesheet">
-
+<link href="<c:url value='/static/css/bootstrap-editable.css' />" rel="stylesheet">
 </head>
+
 
 <body>
 
-
-	    <!-- Top fixed menu start -->
+    <!-- Top fixed menu start -->
 	<div class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
 			<div class="navbar-header">
@@ -60,25 +59,50 @@
 		</div>
 	</div>
 	 <!-- Top fixed menu end -->
-
-	<div class="container">
+	 
+	 
+	 
+	<div class="container"></div>
+	<hr>
+	<div class="container" style="text-align: justify;">
 		<div class="row">
-			<div id="" class="col-md-12">
-				<h3>All Questions</h3>
-					<c:set var="count" value="0" scope="page" />
-					<c:forEach var="question" items="${QuestionsList}" >
-					<c:set var="count" value="${count + 1}" scope="page"/>
-					<div><b>${count}. </b>${question.content}<br>(a) ${question.option1}<br>(b) ${question.option2}<br>(c) ${question.option3}<br>(d) ${question.option4}<br><br>
-					<a href="<c:url value='/questions/edit/${question.id}'/>" class='btn btn-primary btn-small active' role='button'>Edit</a>
-					<a href="<c:url value='/questions/delete/${question.id}'/>" class='btn btn-primary btn-small active' role='button'>Delete</a>
-					</div><hr><br>
-				</c:forEach>
-			
+			<div class="col-md-4">
+				<img class="img-rounded" src="data:image/png;base64,"
+					data-src="holder.js/300x200" alt="Generic placeholder image">
+				<h2>Physics</h2>
+				<p></p>
+				<p>
+					<a class="btn btn-primary"
+						href="<c:url value='/questions/create'/>">Create
+						Questions&raquo;</a><br>
+					<br> <a class="btn btn-primary" href="#">Edit
+						Questions&raquo;</a>
+				</p>
 			</div>
-		
+			<div class="col-md-4">
+				<img class="img-rounded" src="data:image/png;base64,"
+					data-src="holder.js/300x200" alt="Generic placeholder image">
+				<h2>Mathematics</h2>
+				<p></p>
+				<p>
+					<a class="btn btn-primary" href="#">Create Questions&raquo;</a><br>
+					<br> <a class="btn btn-primary" href="#">Edit
+						Questions&raquo;</a>
+				</p>
+
+			</div>
+			<div class="col-md-4">
+				<img class="img-rounded" src="data:image/png;base64,"
+					data-src="holder.js/300x200" alt="Generic placeholder image">
+				<h2>Chemistry</h2>
+				<p></p>
+				<p>
+					<a class="btn btn-primary" href="#">Create Questions&raquo;</a><br>
+					<br> <a class="btn btn-primary" href="#">Edit
+						Questions&raquo;</a>
+				</p>
+			</div>
 		</div>
-	
-	
 	</div>
 	<hr>
 	<footer>
@@ -88,7 +112,7 @@
 	<script src="<c:url value='/static/js/bootstrap.min.js' />"></script>
 	<script src="<c:url value='/static/js/holder.js' />"></script>
 	
-	
+	<script src="bootstrap-editable/js/bootstrap-editable.js"></script>
 </body>
 
 

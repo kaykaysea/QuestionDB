@@ -14,6 +14,8 @@
 <script src="<c:url value='/static/js/bootstrap-tagsinput.js' />"></script>
 <script type="text/javascript"
 	src='<c:url value="/static/js/ckeditor/ckeditor.js" />'></script>
+<script type="text/javascript"
+	src='<c:url value="/static/js/bootstrap-editable.js" />'></script>
 <title>Questions Page</title>
 <link href="<c:url value='/static/css/bootstrap.css' />"
 	rel="stylesheet">
@@ -26,7 +28,11 @@
 	rel="stylesheet">
 	<link href="<c:url value='/static/css/bootstrap-tagsinput.css' />"
 	rel="stylesheet">
+<link href="<c:url value='/static/css/bootstrap-editable.css' />"
+	rel="stylesheet">	
 
+<script type="text/javascript"
+	src='<c:url value="/static/js/x-edit-main.js" />'></script>
 <script type="text/javascript">
 
 $(document).ready(function(){
@@ -53,8 +59,9 @@ $(document).ready(function(){
 						var branchName = '';
 						for(var i=0;i<response.length;i++){
 							branchName = response[i].name.replace(/'/g, "\\'");
-							branchId = response[i].name.toString();
-							branchList += '<li><a href="javascript:viewTopics('+'\''+branchName+'\''+','+'\''+branchName+'\''+')">'+response[i].name+'</a>';
+							//branchId = response[i].name.toString();
+							branchId = response[i].id.toString();
+							branchList += '<li><a href="javascript:viewTopics('+'\''+branchId+'\''+','+'\''+branchName+'\''+')">'+response[i].name+'</a>';
 										
 						}
 						
@@ -372,6 +379,7 @@ function viewConcepts(subTopicId,subTopicName){
 						<c:forEach var="branch" items="${BRANCH_LIST}">
 							<li><a href="javascript:viewTopics('${branch.id}','${branch.name}')">${branch.name}</a></li>
 						</c:forEach>
+						<li><a href="#" id="username" data-type="text" data-placement="right" data-title="Enter username">superuser</a></li>
 					</ol>
 					
 				</div>

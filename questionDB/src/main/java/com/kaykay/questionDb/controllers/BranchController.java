@@ -47,6 +47,20 @@ public class BranchController {
 		
 	}
 	
+	@RequestMapping("edit")
+	public String editBranch(ModelMap model){
+		
+		model.addAttribute("BRANCH", new Branch());
+		model.addAttribute("BRANCH_LIST",branchService.getAllBranches());
+		model.addAttribute("TOPIC", new Topic());
+		model.addAttribute("SUBTOPIC", new SubTopic());
+		model.addAttribute("CONCEPT", new Concept());
+		
+		return "editBranchPage";
+		
+		
+	}
+	
 	
 	@RequestMapping("create")
 	@ResponseBody

@@ -14,6 +14,8 @@
 <script src="<c:url value='/static/js/bootstrap-tagsinput.js' />"></script>
 <script type="text/javascript"
 	src='<c:url value="/static/js/ckeditor/ckeditor.js" />'></script>
+<script type="text/javascript"
+	src='<c:url value="/static/js/bootstrap-editable.js" />'></script>
 <title>Questions Page</title>
 <link href="<c:url value='/static/css/bootstrap.css' />"
 	rel="stylesheet">
@@ -26,34 +28,47 @@
 	rel="stylesheet">
 	<link href="<c:url value='/static/css/bootstrap-tagsinput.css' />"
 	rel="stylesheet">
+<link href="<c:url value='/static/css/bootstrap-editable.css' />"
+	rel="stylesheet">	
 
+<script type="text/javascript"
+	src='<c:url value="/static/js/x-edit-main.js" />'></script>
 <script type="text/javascript">
 
 $(document).ready(function(){
 	
-	$('#questionBtn').click(function(event){
-		var id = $('#questionId').val();
-		var editBtn = "<a href='${pageContext.request.contextPath}/questions/edit/"+id+"' class='btn btn-primary btn-small active' role='button'>Edit Question</a>";
+	$('#branchForm').submit(function(event){
+		var name = $('#branchName').val();
+		var json = {"name":name};
+		
 		$.ajax({
-			url:'${pageContext.request.contextPath}/questions/'+id,
-			type:"GET",
-			dataType:"json",
-			contentType:"application/json",
-			success: function(response){
-			$('#questionIdx').show();
-			$('#questionContent').html(response.content);
-			$('#questionTopic').html(response.topic);
-			$('#questionSubTopic').html(response.SubTopic);
-			$('#questionOption1').html('(a)'+response.option1);
-			$('#questionOption2').html('(b)'+response.option2);
-			$('#questionOption3').html('(c)'+response.option3);
-			alert('(c)'+response.option3);
-			$('#questionOption4').html('(d)'+response.option4);
-			$('#questionExam').html(response.exam);
-			$('#questionDifficulty').html(response.difficulty);
-			$('#questionKey').html(response.key);
-			$('#questionYear').html(response.year);
-			$('#questionEditButton').html(editBtn);
+			url:'${pageContext.request.contextPath}/branch/create',
+			data:JSON.stringify(json),
+			type:"POST",
+			beforeSend: function(xhr) {  
+	            xhr.setRequestHeader("Accept", "application/json");  
+	            xhr.setRequestHeader("Content-Type", "application/json");  
+	        },  
+			success: function(branch){
+				$.ajax({
+					url:'${pageContext.request.contextPath}/branch/all',
+					type:"GET",
+					success:function(response){
+						
+						var branchList = "<ol>";
+						var branchName = '';
+						for(var i=0;i<response.length;i++){
+							branchName = response[i].name.replace(/'/g, "\\'");
+							//branchId = response[i].name.toString();
+							branchId = response[i].id.toString();
+							branchList += '<li><a href="javascript:viewTopics('+'\''+branchId+'\''+','+'\''+branchName+'\''+')">'+response[i].name+'</a>';
+										
+						}
+						
+						branchList+="</ol>";
+						$('#branchResponse').html(branchList);
+					}
+				});
 
 			}
 		});
@@ -157,6 +172,7 @@ $(document).ready(function(){
 		var branchId = $('#branchId').text();
 		var topicId = $('#topicId').text();
 		var topicId_enc = encodeURIComponent(topicId);
+		var topicName = $('#topicNameHolder').html();
 		var subTopicId = $('#subTopicId').text();
 		var subTopicId_enc = encodeURIComponent(subTopicId);
 		var subTopicName = $('#subTopicNameHolder').html();
@@ -203,7 +219,107 @@ $(document).ready(function(){
 });
 
 
+function viewTopics(branchId,branchName){
+	$('#topicContainer').show();
+	$('#subTopicContainer').hide();
+	$('#conceptContainer').hide();
+	//alert('BranchId'+branchId);
+	$('#branchId').text(branchId);
+	$.ajax({
+		url:'${pageContext.request.contextPath}/branch/'+branchId+'/topics',
+		type:"GET",
+		success:function(response){
+			//alert('response'+response);
+			//alert('Branch Name'+branchName);
+			//alert('response length'+response.length);
+			var topicList = "<h4>Topics for "+branchName+"</h4><ol>";
+			for(var i=0;i<response.length;i++){
+				
+				
+				topicList += '<li><a href="javascript:viewSubTopics('+'\''+response[i].id.replace(/'/g, "\\'")+'\''+','+'\''+response[i].name.replace(/'/g, "\\'")+'\''+')">'+response[i].name+'</a>';
+							
+			}
+			
+			topicList+="</ol>";
+			$('#topicResponse').html(topicList);
+			
+		}
+		
+		
+	});
+	
+}
 
+
+function viewSubTopics(topicId,topicName){
+	$('#subTopicContainer').show();
+	$('#conceptContainer').hide();
+	$('#topicId').text(topicId);
+	$('#topicNameHolder').html(topicName);
+	var branchId = $('#branchId').text();
+	$.ajax({
+		url:'${pageContext.request.contextPath}/branch/'+branchId+'/'+topicId+'/subTopics',
+		type:"GET",
+		success:function(response){
+			//alert('response'+response);
+			//alert('Branch Name'+branchName);
+			//alert('response length'+response.length);
+			var subTopicList = "<h4>Sub Topics for "+topicName+"</h4><ol>";
+			for(var i=0;i<response.length;i++){
+				subTopicList += '<li><a href="javascript:viewConcepts('+'\''+response[i].id.replace(/'/g, "\\'")+'\''+','+'\''+response[i].name.replace(/'/g, "\\'")+'\''+')">'+response[i].name+'</a>';
+							
+			}
+			
+			subTopicList+="</ol>";
+			$('#subTopicResponse').html(subTopicList);
+			
+		}
+		
+		
+	});
+	
+}
+
+
+function viewConcepts(subTopicId,subTopicName){
+	$('#conceptContainer').show();
+	$('#subTopicId').html(subTopicId);
+	$('#subTopicNameHolder').html(subTopicName);
+	var branchId = $('#branchId').text();
+	var topicId = $('#topicId').text();
+	$.ajax({
+		url:'${pageContext.request.contextPath}/branch/'+branchId+'/'+topicId+'/'+subTopicId+'/concepts',
+		type:"GET",
+		success:function(response){
+			//alert('response'+response);
+			//alert('Branch Name'+branchName);
+			//alert('response length'+response.length);
+			var conceptList = "<h4>Concepts for "+subTopicName+"</h4><ol>";
+			for(var i=0;i<response.length;i++){
+				conceptList += '<li><a href=#>'+response[i].name+'</a>';
+							
+			}
+			
+			conceptList+="</ol>";
+			$('#conceptResponse').html(conceptList);
+			
+		}
+		
+		
+	});
+	
+}
+
+
+function branchEditable(branchId){
+	
+	var sel_id = '#'+branchId;
+	$(sel_id).editable();
+	
+	
+	
+	
+}
 
 
 
@@ -214,7 +330,7 @@ $(document).ready(function(){
 
 <body>
 
-    <!-- Top fixed menu start -->
+	    <!-- Top fixed menu start -->
 	<div class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
 			<div class="navbar-header">
@@ -235,7 +351,7 @@ $(document).ready(function(){
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
 						data-toggle="dropdown">Questions<b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a href="<c:url value='/questions/viewAll'/>">Physics</a></li>
+							<li><a href=#>Physics</a></li>
 							<li><a href=#>Mathematics</a></li>
 						</ul>
 					</li>
@@ -248,42 +364,107 @@ $(document).ready(function(){
 		</div>
 	</div>
 
- 
+	<div class="container">
+		
+			
+
+
+
+	</div>
+   
 	<div class="container ">
 		
 		<div style="width: 900px;" class="row">
-			<div  id="branchContainer" class="form-group col-md-12">
-				
-					<label  for="questionId">Question ID:</label>
-					<input  id="questionId" class="form-control" /><br>
-					<input type="submit" value="Submit" class="btn" id="questionBtn">
-				
+			<div  id="branchContainer" class="form-group col-md-3">
+				<form:form modelAttribute="BRANCH" id="branchForm" >
+					<form:label path="name" for="branchName">Branch :</form:label>
+					<form:input path="name"  id="branchName" class="form-control" /><br>
+					<input type="submit" value="Submit" class="btn">
+				</form:form>
 				<hr>
-				<h4>Question</h4>
+				<h4>Branches</h4>
+				<div id="branchResponse">
 					
-				<div id="questionIdx" style="display:none;" >
-					<div id="questionContent"></div>
-					<div id="questionOption1"></div>
-					<div id="questionOption2"></div>
-					<div id="questionOption3"></div>
-					<div id="questionOption4"></div>
-					
-					<div id="questionTopic"></div>
-					<div id="questionSubTopic"></div>
-					<div id="questionConcept"></div>
-					<div id="questionExam"></div>
-					<div id="questionDifficulty"></div>
-					<div id="questionKey"></div>
-					<div id="questionYear"></div>
-					<div id="questionEditButton"><a href="" class="btn btn-primary btn-small active" role="button">Edit Question</a></div>
-					
-					
+					<ol>
+						<c:forEach var="branch" items="${BRANCH_LIST}">
+							<li><a id ='${branch.id}' href="javascript:viewTopics('${branch.id}','${branch.name}');branchEditable('${branch.id}')">${branch.name}</a></li>
+						</c:forEach>
+						<li><a href="#" id="username" data-type="text" data-placement="right" data-title="Enter username">superuser</a></li>
+					</ol>
 					
 				</div>
 			</div>
-      </div>
-	</div>	
-	
+			
+			<div id="branchId" style="display:none;" ></div>
+			
+			
+			<div id="topicContainer" class="form-group col-md-3" style="display: none">
+				<form:form modelAttribute="TOPIC" id="topicForm">
+					<form:label path="name">Topic :</form:label>
+					<form:input path="name" id="topicName" class="form-control"/><br>
+					<input type="submit" value="Submit" class="btn">
+				</form:form>
+				<hr>
+				
+				<div id="topicResponse">
+					
+
+					
+				</div>
+				
+			</div>
+			
+			
+			<div id="topicId" style="display:none;" ></div>
+			<div id="topicNameHolder" style="display:none;" ></div>
+			
+			
+			
+			
+			<div id="subTopicContainer" class="form-group col-md-3" style="display:none">
+				<form:form modelAttribute="SUBTOPIC" id="subTopicForm">
+					<form:label path="name">Sub Topic :</form:label>
+					<form:input path="name" id="subTopicName" class="form-control"/><br>
+					<input type="submit" value="Submit" class="btn">
+				</form:form>
+				<hr>
+				
+				<div id="subTopicResponse">
+					
+
+					
+				</div>
+				
+			</div>
+			
+			<div id="subTopicId" style="display:none;" ></div>
+			<div id="subTopicNameHolder" style="display:none;" ></div>
+			
+			
+			
+			<div id="conceptContainer" class="form-group col-md-3" style="display:none">
+				<form:form modelAttribute="CONCEPT" id="conceptForm">
+					<form:label path="name">Concepts:</form:label>
+					<form:input path="name" id="conceptName" class="form-control"/><br>
+					<input type="submit" value="Submit" class="btn">
+				</form:form>
+				<hr>
+				
+				<div id="conceptResponse">
+					
+
+					
+				</div>
+				
+			</div>
+			
+			
+			
+			
+			
+		</div>
+		
+	</div>
 
 
 

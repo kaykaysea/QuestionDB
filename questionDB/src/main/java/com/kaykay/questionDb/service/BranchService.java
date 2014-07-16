@@ -38,9 +38,18 @@ public class BranchService {
 	
 	public Branch createBranch(Branch branch){
 			
-			branch.setId(branch.getName().replaceAll(" ", ""));
+			//branch.setId(branch.getName().replaceAll(" ", ""));
 			return branchRepository.save(branch);
 			
+	}
+	
+	
+	public Branch updateBranch(Branch branch){
+		
+		Branch branch1 = getBranchById(branch.getId());
+		branch1.setName(branch.getName());
+		return branchRepository.save(branch1);
+		
 	}
 	
 	public HashMap<String, Topic> getTopicsByBranch(String id){
