@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kaykay.questionDb.domain.Branch;
 import com.kaykay.questionDb.domain.Topic;
 import com.kaykay.questionDb.repository.TopicRepository;
 
@@ -14,6 +15,12 @@ public class TopicService {
 
 	@Autowired
 	TopicRepository topicRepository;
+	
+	public Topic getTopicById(String Id){
+		
+		return topicRepository.findOne(Id);
+		
+	}
 	
 	public List<Topic> getTopicsList(){
 		
@@ -29,6 +36,14 @@ public class TopicService {
 		
 		topic.setId(UUID.randomUUID().toString());
 		return topicRepository.save(topic);
+	}
+	
+	public Topic updateTopic(Topic topic){
+		
+		Topic topic1 = getTopicById(topic.getId());
+		topic1.setName(topic.getName());
+		return topicRepository.save(topic1);
+		
 	}
 	
 }

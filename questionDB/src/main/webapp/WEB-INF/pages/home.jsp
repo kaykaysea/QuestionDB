@@ -75,8 +75,8 @@
 					<a class="btn btn-primary"
 						href="<c:url value='/questions/create'/>">Create
 						Questions&raquo;</a><br>
-					<br> <a class="btn btn-primary" href="#">Edit
-						Questions&raquo;</a>
+					<br> <!-- <a class="btn btn-primary" href="#">Edit
+						Questions&raquo;</a> -->
 				</p>
 			</div>
 			<div class="col-md-4">
@@ -86,8 +86,8 @@
 				<p></p>
 				<p>
 					<a class="btn btn-primary" href="#">Create Questions&raquo;</a><br>
-					<br> <a class="btn btn-primary" href="#">Edit
-						Questions&raquo;</a>
+					<br> <!-- <a class="btn btn-primary" href="#">Edit
+						Questions&raquo;</a> -->
 				</p>
 
 			</div>
@@ -98,8 +98,8 @@
 				<p></p>
 				<p>
 					<a class="btn btn-primary" href="#">Create Questions&raquo;</a><br>
-					<br> <a class="btn btn-primary" href="#">Edit
-						Questions&raquo;</a>
+					<br> <!-- <a class="btn btn-primary" href="#">Edit
+						Questions&raquo;</a> -->
 				</p>
 			</div>
 		</div>

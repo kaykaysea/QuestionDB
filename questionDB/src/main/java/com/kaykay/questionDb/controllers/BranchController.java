@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kaykay.questionDb.domain.Branch;
@@ -22,6 +23,7 @@ import com.kaykay.questionDb.domain.SubTopic;
 import com.kaykay.questionDb.domain.Topic;
 import com.kaykay.questionDb.repository.BranchRepository;
 import com.kaykay.questionDb.service.BranchService;
+import com.kaykay.questionDb.service.TopicService;
 
 @Controller
 @RequestMapping("branch")
@@ -29,6 +31,9 @@ public class BranchController {
 	
 	@Autowired
 	BranchService branchService;
+	
+	@Autowired
+	TopicService topicService;
 	
 	@Autowired	
 	BranchRepository branchRepository;
@@ -71,6 +76,30 @@ public class BranchController {
 		
 	}
 	
+	@RequestMapping("update/{id}")
+	@ResponseBody
+	public Branch updateBranch(@RequestParam("value") String name, @PathVariable("id") String id){
+		 
+			Branch branch = branchService.getBranchById(id);
+			branch.setName(name);
+		
+			return branchService.updateBranch(branch);
+		
+		
+	}
+	
+	/*@RequestMapping("topic/update/{id}")
+	@ResponseBody
+	public Topic updateTopic(@RequestParam("value") String name, @PathVariable("id") String id){
+		 
+			Topic topic = topicService.getTopicById(id);
+			System.out.println(topic.getId()+"  nekfnn");
+			topic.setName(name);
+		
+			return topicService.updateTopic(topic);
+		
+		
+	}*/
 	
 	@RequestMapping("all")
 	@ResponseBody
@@ -183,6 +212,62 @@ public class BranchController {
 	
 	}
 	
+	@RequestMapping(value="{branchId}/topic/edit",method=RequestMethod.POST)
+	@ResponseBody
+	public Branch updateTopic(@PathVariable("branchId") String branchId, @RequestParam("value") String topicName,@RequestParam("pk") String id){
+		
+		Branch branch = branchService.getBranchById(branchId);
+		HashMap<String, Topic> topicMap = new HashMap<String, Topic>();
+		
+		if(branch.getTopicList()!=null){
+			topicMap = branch.getTopicList();
+			
+		}
+		
+		Topic updtTopic = topicMap.get(id);
+		updtTopic.setName(topicName);
+    	topicMap.put(id, updtTopic);
+    	
+        branch.setTopicList(topicMap);
+		return branchRepository.save(branch);
+	
+	}
+	
+	
+	@RequestMapping(value="{branchId}/{topicId}/subTopic/edit",method=RequestMethod.POST)
+	@ResponseBody
+	public Branch editSubTopic(@PathVariable("branchId") String branchId,@PathVariable("topicId") String topicId, @RequestParam("value") String subTopicName,@RequestParam("pk") String id){
+		
+		String topicId_dec = "";
+		
+	    try {
+			topicId_dec = URLDecoder.decode(topicId, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	    System.out.println(topicId_dec);
+		
+		Branch branch = branchService.getBranchById(branchId);
+		HashMap<String, Topic> topicMap = branch.getTopicList();
+		HashMap<String, SubTopic> subTopicMap = new HashMap<String, SubTopic>();
+		
+		if(topicMap.get(topicId_dec).getSubTopicList()!=null){
+			subTopicMap = topicMap.get(topicId_dec).getSubTopicList();
+		}
+		
+		SubTopic updtSubTopic = subTopicMap.get(id);
+		updtSubTopic.setName(subTopicName);
+		
+		subTopicMap.put(id, updtSubTopic);
+		Topic updatedTopic = topicMap.get(topicId_dec);
+		updatedTopic.setSubTopicList(subTopicMap);
+		topicMap.put(topicId, updatedTopic);
+		branch.setTopicList(topicMap);
+		
+		return branchRepository.save(branch);
+		
+		
+	}
 	
 	@RequestMapping(value="{branchId}/{topicId}/addSubTopic",method=RequestMethod.POST)
 	@ResponseBody
@@ -215,6 +300,9 @@ public class BranchController {
 		
 		
 	}
+	
+	
+	
 	
 	
 	@RequestMapping(value="{branchId}/{topicId}/{subTopicId}/addConcept",method=RequestMethod.POST)
@@ -261,7 +349,51 @@ public class BranchController {
 	}
 	
 	
-	
+	@RequestMapping(value="{branchId}/{topicId}/{subTopicId}/concept/edit",method=RequestMethod.POST)
+	@ResponseBody
+	public Branch editConcept(@PathVariable("branchId") String branchId,
+									   @PathVariable("topicId") String topicId,
+									   @PathVariable("subTopicId") String subTopicId,
+									   @RequestParam("value") String concept, @RequestParam("pk") String id ){
+		
+		String topicId_dec = "";
+		String subTopicId_dec = "";
+		
+	    try {
+			topicId_dec = URLDecoder.decode(topicId, "UTF-8");
+			subTopicId_dec = URLDecoder.decode(subTopicId, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		
+		Branch branch = branchService.getBranchById(branchId);
+		SubTopic subTopic = branchService.getBranchById(branchId).getTopicList().get(topicId_dec).getSubTopicList().get(subTopicId_dec);
+		
+		HashMap<String,Concept> conceptMap = new HashMap<String, Concept>();
+		
+		if(subTopic.getConceptMap()!=null){
+			conceptMap = subTopic.getConceptMap();
+		}
+		
+		Concept updtConcept = conceptMap.get(id);
+		updtConcept.setName(concept);
+		
+		conceptMap.put(id, updtConcept);
+		subTopic.setConceptMap(conceptMap);
+		
+		Topic topic = branchService.getBranchById(branchId).getTopicList().get(topicId_dec);
+		topic.getSubTopicList().put(subTopicId_dec, subTopic);
+		
+		HashMap<String, Topic> topicMap = branch.getTopicList();
+		topicMap.put(topicId_dec, topic);
+
+		branch.setTopicList(topicMap);	
+		
+		
+		return branchService.createBranch(branch);
+		
+	}
 	
 	
 	

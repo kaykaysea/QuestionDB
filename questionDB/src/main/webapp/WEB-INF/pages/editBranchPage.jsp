@@ -101,7 +101,7 @@ $(document).ready(function(){
 						
 						var topicList = "<h4>Topics for "+branch.name+"</h4><ol>";
 						for(var i=0;i<response.length;i++){
-							topicList += '<li><a href="javascript:viewSubTopics('+'\''+response[i].id.replace(/'/g, "\\'")+'\''+','+'\''+response[i].name.replace(/'/g, "\\'")+'\''+')">'+response[i].name+'</a>';
+							topicList += '<li><a id="'+response[i].id+'" data-type="text" data-name="name" data-pk="'+response[i].id+'" data-url="/questionDB/branch/topic/update/'+response[i].id+'  href="javascript:viewSubTopics('+'\''+response[i].id.replace(/'/g, "\\'")+'\''+','+'\''+response[i].name.replace(/'/g, "\\'")+'\''+')">'+response[i].name+'</a>';
 										
 						}
 						
@@ -225,6 +225,9 @@ function viewTopics(branchId,branchName){
 	$('#conceptContainer').hide();
 	//alert('BranchId'+branchId);
 	$('#branchId').text(branchId);
+	//var branch_edit = '#branchId'+'edit';
+	var branch_name = $('#'+branchId+'edit').text();
+	
 	$.ajax({
 		url:'${pageContext.request.contextPath}/branch/'+branchId+'/topics',
 		type:"GET",
@@ -232,17 +235,19 @@ function viewTopics(branchId,branchName){
 			//alert('response'+response);
 			//alert('Branch Name'+branchName);
 			//alert('response length'+response.length);
-			var topicList = "<h4>Topics for "+branchName+"</h4><ol>";
+			var topicList = "<h4>Topics for "+branch_name+"</h4><ol>";
 			for(var i=0;i<response.length;i++){
 				
 				
-				topicList += '<li><a href="javascript:viewSubTopics('+'\''+response[i].id.replace(/'/g, "\\'")+'\''+','+'\''+response[i].name.replace(/'/g, "\\'")+'\''+')">'+response[i].name+'</a>';
+				//topicList += '<li><a href="javascript:viewSubTopics('+'\''+response[i].id.replace(/'/g, "\\'")+'\''+','+'\''+response[i].name.replace(/'/g, "\\'")+'\''+');topicEditable('+'\''+response[i].id.replace(/'/g, "\\'")+'\''+')">'+response[i].name+'</a>';
+				topicList += '<li><a id="'+response[i].id+'edit" data-type="text" data-name="name" data-pk="'+response[i].id+'" data-url="/questionDB/branch/'+branchId+'/topic/edit/"  href="javascript:viewSubTopics('+'\''+response[i].id.replace(/'/g, "\\'")+'\''+','+'\''+response[i].name.replace(/'/g, "\\'")+'\''+')">'+response[i].name+'</a>'+'&nbsp;<a href="javascript:makeEditable('+'\''+response[i].id.replace(/'/g, "\\'")+'\''+')"><span   class="glyphicon glyphicon-pencil"></span></a>';
+
 							
 			}
 			
 			topicList+="</ol>";
 			$('#topicResponse').html(topicList);
-			
+			//branchEditable(branchId);
 		}
 		
 		
@@ -255,7 +260,7 @@ function viewSubTopics(topicId,topicName){
 	$('#subTopicContainer').show();
 	$('#conceptContainer').hide();
 	$('#topicId').text(topicId);
-	$('#topicNameHolder').html(topicName);
+	$('#topicNameHolder').html(topicName);	
 	var branchId = $('#branchId').text();
 	$.ajax({
 		url:'${pageContext.request.contextPath}/branch/'+branchId+'/'+topicId+'/subTopics',
@@ -266,7 +271,8 @@ function viewSubTopics(topicId,topicName){
 			//alert('response length'+response.length);
 			var subTopicList = "<h4>Sub Topics for "+topicName+"</h4><ol>";
 			for(var i=0;i<response.length;i++){
-				subTopicList += '<li><a href="javascript:viewConcepts('+'\''+response[i].id.replace(/'/g, "\\'")+'\''+','+'\''+response[i].name.replace(/'/g, "\\'")+'\''+')">'+response[i].name+'</a>';
+				subTopicList += '<li><a id="'+response[i].id+'edit" data-type="text" data-name="name" data-pk="'+response[i].id+'" data-url="/questionDB/branch/'+branchId+'/'+topicId+'/subTopic/edit/"   href="javascript:viewConcepts('+'\''+response[i].id.replace(/'/g, "\\'")+'\''+','+'\''+response[i].name.replace(/'/g, "\\'")+'\''+')">'+response[i].name+'</a>'+'&nbsp;<a href="javascript:makeEditable('+'\''+response[i].id.replace(/'/g, "\\'")+'\''+')"><span   class="glyphicon glyphicon-pencil"></span></a>';
+
 							
 			}
 			
@@ -296,7 +302,8 @@ function viewConcepts(subTopicId,subTopicName){
 			//alert('response length'+response.length);
 			var conceptList = "<h4>Concepts for "+subTopicName+"</h4><ol>";
 			for(var i=0;i<response.length;i++){
-				conceptList += '<li><a href=#>'+response[i].name+'</a>';
+				//conceptList += '<li><a href=#>'+response[i].name+'</a>';
+				conceptList += '<li><a id="'+response[i].id+'edit" data-type="text" data-name="name" data-pk="'+response[i].id+'" data-url="/questionDB/branch/'+branchId+'/'+topicId+'/'+subTopicId+'/concept/edit/"   href=#>'+response[i].name+'</a>'+'&nbsp;<a href="javascript:makeEditable('+'\''+response[i].id.replace(/'/g, "\\'")+'\''+')"><span   class="glyphicon glyphicon-pencil"></span></a>';
 							
 			}
 			
@@ -316,8 +323,27 @@ function branchEditable(branchId){
 	var sel_id = '#'+branchId;
 	$(sel_id).editable();
 	
+}
+
+function topicEditable(topicId){
 	
+	var top_id = '#'+topicId;
+	$(top_id).editable();
+	//alert('hi');
 	
+}
+
+function makeEditable(id){
+	
+	var id = '#'+id+'edit';
+	$(id).editable({
+			//send: 'never',  
+		    //title: 'Enter username',
+		    placement: 'right',
+		    toggle: 'manual',		
+	
+	});
+	$(id).editable('toggle');
 	
 }
 
@@ -387,9 +413,8 @@ function branchEditable(branchId){
 					
 					<ol>
 						<c:forEach var="branch" items="${BRANCH_LIST}">
-							<li><a id ='${branch.id}' href="javascript:viewTopics('${branch.id}','${branch.name}');branchEditable('${branch.id}')">${branch.name}</a></li>
+							<li><a id="${branch.id}edit" data-name="name" data-type="text" data-pk='${branch.id}' data-url="/questionDB/branch/update/${branch.id}" href="javascript:viewTopics('${branch.id}','${branch.name}')">${branch.name}</a>&nbsp;<a href="javascript:makeEditable('${branch.id}')"><span   class="glyphicon glyphicon-pencil"></span></a></li>
 						</c:forEach>
-						<li><a href="#" id="username" data-type="text" data-placement="right" data-title="Enter username">superuser</a></li>
 					</ol>
 					
 				</div>

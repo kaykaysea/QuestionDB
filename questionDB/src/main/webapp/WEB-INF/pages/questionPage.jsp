@@ -47,7 +47,6 @@ $(document).ready(function(){
 			$('#questionOption1').html('(a)'+response.option1);
 			$('#questionOption2').html('(b)'+response.option2);
 			$('#questionOption3').html('(c)'+response.option3);
-			alert('(c)'+response.option3);
 			$('#questionOption4').html('(d)'+response.option4);
 			$('#questionExam').html(response.exam);
 			$('#questionDifficulty').html(response.difficulty);

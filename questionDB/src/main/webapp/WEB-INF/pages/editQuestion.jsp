@@ -151,7 +151,7 @@
 			
 			
 			&nbsp;&nbsp;&nbsp;<b>Key:</b>
-			<div class="form-group">
+			<!--  <div class="form-group">
 				<form:label path="key"></form:label>
 				<form:select path="key" class="form-control" placeholder="">
 					<form:option value="A" label="A" />
@@ -160,8 +160,22 @@
 					<form:option value="D" label="D" />
 				</form:select>
 				&nbsp;&nbsp;&nbsp;
-			</div>
+			</div>-->
+			<div class="form-group">
+				<form:label path="key" class="checkbox-inline">
+					<form:checkbox path="key" value="A" />A
+				</form:label>
 			
+				<form:label path="key" class="checkbox-inline">
+					<form:checkbox path="key" value="B" />B
+				</form:label>
+				<form:label path="key" class="checkbox-inline">
+					<form:checkbox path="key" value="C" />C
+				</form:label>
+				<form:label path="key" class="checkbox-inline">
+					<form:checkbox path="key" value="D" />D
+				</form:label>
+			</div>
 			<br>
 			<hr>			
 			<div class="form-group">
@@ -339,16 +353,16 @@
 	<script type="text/javascript">
 		CKEDITOR.replace('content');
 		CKEDITOR.replace('option1', {
-			width : "400px"
+			//width : "400px"
 		});
 		CKEDITOR.replace('option2', {
-			width : "400px"
+			//width : "400px"
 		});
 		CKEDITOR.replace('option3', {
-			width : "400px"
+			//width : "400px"
 		});
 		CKEDITOR.replace('option4', {
-			width : "400px"
+			//width : "400px"
 		});
 		CKEDITOR.replace('solution');
 	</script>
