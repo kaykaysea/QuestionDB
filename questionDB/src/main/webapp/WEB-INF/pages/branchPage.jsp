@@ -379,7 +379,6 @@ function viewConcepts(subTopicId,subTopicName){
 						<c:forEach var="branch" items="${BRANCH_LIST}">
 							<li><a href="javascript:viewTopics('${branch.id}','${branch.name}')">${branch.name}</a></li>
 						</c:forEach>
-						<li><a href="#" id="username" data-type="text" data-placement="right" data-title="Enter username">superuser</a></li>
 					</ol>
 					
 				</div>

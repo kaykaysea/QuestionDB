@@ -88,6 +88,20 @@ public class BranchController {
 		
 	}
 	
+	@RequestMapping("delete/{id}")
+	@ResponseBody
+	public String deleteBranch(@PathVariable("id") String id){
+		 
+			Branch branch = branchService.getBranchById(id);
+			branchService.deleteBranch(id);
+			//branch.setName(name);
+		
+			return "branch deleted";
+		
+		
+	}
+	
+	
 	/*@RequestMapping("topic/update/{id}")
 	@ResponseBody
 	public Topic updateTopic(@RequestParam("value") String name, @PathVariable("id") String id){

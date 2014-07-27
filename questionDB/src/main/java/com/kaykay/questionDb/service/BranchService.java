@@ -43,6 +43,11 @@ public class BranchService {
 			
 	}
 	
+	public void deleteBranch(String id){
+		
+		branchRepository.delete(id);
+	}
+	
 	
 	public Branch updateBranch(Branch branch){
 		
