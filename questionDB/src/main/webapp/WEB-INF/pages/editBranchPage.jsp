@@ -89,7 +89,7 @@
 											};
 											var branchId = $('#branchId')
 													.text();
-											//alert(branchId);
+											
 
 											$
 													.ajax({
@@ -137,10 +137,10 @@
 													.text();
 											var topicId = $('#topicId').text();
 											var topicId_enc = encodeURIComponent(topicId);
-											//alert(topicId+','+topicId_enc);
+											
 											var topicName = $(
 													'#topicNameHolder').html();
-											//alert(branchId);
+											
 
 											$
 													.ajax({
@@ -306,7 +306,7 @@
 	
 	function deleteBranch(branchId) {
 
-		alert("Are you sure?");
+		alert("Are you sure you want to delete this branch?");
 		
 		$
 		.ajax({
@@ -328,7 +328,7 @@
 	
 	function deleteTopic(branchId,topicId) {
 
-		alert("Are you sure?");
+		alert("Are you sure you want to delete this topic?");
 		
 		$
 		.ajax({
@@ -349,7 +349,7 @@
 	
 	function deleteSubTopic(branchId,topicId,subTopicId) {
 
-		alert("Are you sure?");
+		alert("Are you sure you want to delete this sub topic?");
 		
 		$
 		.ajax({
@@ -370,7 +370,7 @@
 	
 	function deleteConcept(branchId,topicId,subTopicId,conceptId) {
 
-		alert("Are you sure?");
+		alert("Are you sure you want to delete this concept?");
 		
 		$
 		.ajax({
