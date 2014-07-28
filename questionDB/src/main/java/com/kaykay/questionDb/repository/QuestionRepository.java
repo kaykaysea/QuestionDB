@@ -12,5 +12,9 @@ public interface QuestionRepository extends MongoRepository<Question, String> {
 	
 	Question findQuestionById(String Id);
 	
+	Question findQuestionByContent(String searchTerm);
+	
+	List<Question> findByContentRegex(String searchTerm);
+	
 
 }

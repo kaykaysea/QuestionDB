@@ -262,7 +262,7 @@
 																	
 										var subTopicList = '<option value="">Select a sub topic</option>';
 										for(var i=0;i<response.length;i++){
-											subTopicList += '<option value="' + response[i].name + '">'+ response[i].name + '</option>';
+											subTopicList += '<option value="' + response[i].id + '">'+ response[i].name + '</option>';
 														
 										}
 										

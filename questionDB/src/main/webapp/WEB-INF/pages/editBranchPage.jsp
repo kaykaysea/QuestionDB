@@ -10,12 +10,15 @@
 <meta name="author" content="">
 <link rel="shortcut icon" href="../../assets/ico/favicon.png">
 <script src="<c:url value='/static/js/jquery.js' />"></script>
+<script src="<c:url value='/static/js/bootstrap.min.js' />"></script>
 <script src="<c:url value='/static/js/typeahead.min.js' />"></script>
 <script src="<c:url value='/static/js/bootstrap-tagsinput.js' />"></script>
 <script type="text/javascript"
 	src='<c:url value="/static/js/ckeditor/ckeditor.js" />'></script>
 <script type="text/javascript"
 	src='<c:url value="/static/js/bootstrap-editable.js" />'></script>
+<script type="text/javascript"
+	src='<c:url value="/static/js/util.js" />'></script>	
 <title>Questions Page</title>
 <link href="<c:url value='/static/css/bootstrap.css' />"
 	rel="stylesheet">
@@ -65,44 +68,8 @@
 														},
 														success : function(
 																branch) {
-															$
-																	.ajax({
-																		url : '${pageContext.request.contextPath}/branch/all',
-																		type : "GET",
-																		success : function(
-																				response) {
-
-																			var branchList = "<ol>";
-																			var branchName = '';
-																			for (var i = 0; i < response.length; i++) {
-																				branchName = response[i].name
-																						.replace(
-																								/'/g,
-																								"\\'");
-																				//branchId = response[i].name.toString();
-																				branchId = response[i].id
-																						.toString();
-																				branchList += '<li><a href="javascript:viewTopics('
-																						+ '\''
-																						+ branchId
-																						+ '\''
-																						+ ','
-																						+ '\''
-																						+ branchName
-																						+ '\''
-																						+ ')">'
-																						+ response[i].name
-																						+ '</a>';
-
-																			}
-
-																			branchList += "</ol>";
-																			$(
-																					'#branchResponse')
-																					.html(
-																							branchList);
-																		}
-																	});
+															loadBranches();
+															$('#branchName').val('');
 
 														}
 													});
@@ -115,8 +82,7 @@
 								.submit(
 										function(event) {
 											var name = $('#topicName').val();
-											var topicId = name.replace(/\s/g,
-													'');
+											var topicId = generateUUID()+'t';
 											var json = {
 												"name" : name,
 												"id" : topicId
@@ -146,56 +112,10 @@
 														},
 														success : function(
 																branch) {
-															$
-																	.ajax({
-																		url : '${pageContext.request.contextPath}/branch/'
-																				+ branch.id
-																				+ '/topics',
-																		type : "GET",
-																		success : function(
-																				response) {
+															
+															loadTopics(branch.id);
+															$('#topicName').val('');
 
-																			var topicList = "<h4>Topics for "
-																					+ branch.name
-																					+ "</h4><ol>";
-																			for (var i = 0; i < response.length; i++) {
-																				topicList += '<li><a id="'
-																						+ response[i].id
-																						+ '" data-type="text" data-name="name" data-pk="'
-																						+ response[i].id
-																						+ '" data-url="/questionDB/branch/topic/update/'
-																						+ response[i].id
-																						+ '  href="javascript:viewSubTopics('
-																						+ '\''
-																						+ response[i].id
-																								.replace(
-																										/'/g,
-																										"\\'")
-																						+ '\''
-																						+ ','
-																						+ '\''
-																						+ response[i].name
-																								.replace(
-																										/'/g,
-																										"\\'")
-																						+ '\''
-																						+ ')">'
-																						+ response[i].name
-																						+ '</a>';
-
-																			}
-
-																			topicList += "</ol>";
-																			$(
-																					'#topicResponse')
-																					.html(
-																							topicList);
-																			$(
-																					'#topicName')
-																					.val(
-																							'');
-																		}
-																	});
 
 														}
 													});
@@ -208,8 +128,7 @@
 								.submit(
 										function(event) {
 											var name = $('#subTopicName').val();
-											var subTopicId = name.replace(
-													/\s/g, '');
+											var subTopicId = generateUUID()+'st';
 											var json = {
 												"name" : name,
 												"id" : subTopicId
@@ -246,53 +165,10 @@
 														},
 														success : function(
 																branch) {
-															$
-																	.ajax({
-																		url : '${pageContext.request.contextPath}/branch/'
-																				+ branch.id
-																				+ '/'
-																				+ topicId_enc
-																				+ '/subTopics',
-																		type : "GET",
-																		success : function(
-																				response) {
-
-																			var subTopicList = "<h4>Sub Topics for "
-																					+ topicName
-																					+ "</h4><ol>";
-																			for (var i = 0; i < response.length; i++) {
-																				subTopicList += '<li><a href="javascript:viewConcepts('
-																						+ '\''
-																						+ response[i].id
-																								.replace(
-																										/'/g,
-																										"\\'")
-																						+ '\''
-																						+ ','
-																						+ '\''
-																						+ response[i].name
-																								.replace(
-																										/'/g,
-																										"\\'")
-																						+ '\''
-																						+ ')">'
-																						+ response[i].name
-																						+ '</a>';
-
-																			}
-
-																			subTopicList += "</ol>";
-																			$(
-																					'#subTopicResponse')
-																					.html(
-																							subTopicList);
-																			$(
-																					'#subTopicName')
-																					.val(
-																							'');
-																		}
-																	});
-
+																
+															loadSubTopics(branch.id,topicId);
+															$('#subTopicName').val('');
+															
 														}
 													});
 
@@ -304,10 +180,8 @@
 								.submit(
 										function(event) {
 											var conceptName = $('#conceptName')
-													.val().replace('\'',
-															'&quot');
-											var conceptId = conceptName
-													.replace(/\s/g, '');
+													.val();
+											var conceptId = generateUUID()+'c';
 											var json = {
 												"name" : conceptName,
 												"id" : conceptId
@@ -324,7 +198,7 @@
 											var subTopicName = $(
 													'#subTopicNameHolder')
 													.html();
-											//alert(branchId);
+											
 
 											$
 													.ajax({
@@ -351,40 +225,10 @@
 														},
 														success : function(
 																branch) {
-															$
-																	.ajax({
-																		url : '${pageContext.request.contextPath}/branch/'
-																				+ branch.id
-																				+ '/'
-																				+ topicId_enc
-																				+ '/'
-																				+ subTopicId_enc
-																				+ '/concepts',
-																		type : "GET",
-																		success : function(
-																				response) {
-
-																			var conceptList = "<h4>Concepts for "
-																					+ subTopicName
-																					+ "</h4><ol>";
-																			for (var i = 0; i < response.length; i++) {
-																				conceptList += '<li><a href=#>'
-																						+ response[i].name
-																						+ '</a>';
-
-																			}
-
-																			conceptList += "</ol>";
-																			$(
-																					'#conceptResponse')
-																					.html(
-																							conceptList);
-																			$(
-																					'#conceptName')
-																					.val(
-																							'');
-																		}
-																	});
+															
+															
+														loadConcepts(branch.id,topicId,subTopicId);	
+														$('#conceptName').val('');
 
 														}
 													});
@@ -399,56 +243,10 @@
 		$('#topicContainer').show();
 		$('#subTopicContainer').hide();
 		$('#conceptContainer').hide();
-		//alert('BranchId'+branchId);
 		$('#branchId').text(branchId);
-		//var branch_edit = '#branchId'+'edit';
-		var branch_name = $('#' + branchId + 'edit').text();
+				
+		loadTopics(branchId);
 
-		$
-				.ajax({
-					url : '${pageContext.request.contextPath}/branch/'
-							+ branchId + '/topics',
-					type : "GET",
-					success : function(response) {
-						//alert('response'+response);
-						//alert('Branch Name'+branchName);
-						//alert('response length'+response.length);
-						var topicList = "<h4>Topics for " + branch_name
-								+ "</h4><ol>";
-						for (var i = 0; i < response.length; i++) {
-
-							//topicList += '<li><a href="javascript:viewSubTopics('+'\''+response[i].id.replace(/'/g, "\\'")+'\''+','+'\''+response[i].name.replace(/'/g, "\\'")+'\''+');topicEditable('+'\''+response[i].id.replace(/'/g, "\\'")+'\''+')">'+response[i].name+'</a>';
-							topicList += '<li><a id="'
-									+ response[i].id
-									+ 'edit" data-type="text" data-name="name" data-pk="'
-									+ response[i].id
-									+ '" data-url="/questionDB/branch/'
-									+ branchId
-									+ '/topic/edit/"  href="javascript:viewSubTopics('
-									+ '\''
-									+ response[i].id.replace(/'/g, "\\'")
-									+ '\''
-									+ ','
-									+ '\''
-									+ response[i].name.replace(/'/g, "\\'")
-									+ '\''
-									+ ')">'
-									+ response[i].name
-									+ '</a>'
-									+ '&nbsp;<a href="javascript:makeEditable('
-									+ '\''
-									+ response[i].id.replace(/'/g, "\\'")
-									+ '\''
-									+ ')"><span   class="glyphicon glyphicon-pencil"></span></a>';
-
-						}
-
-						topicList += "</ol>";
-						$('#topicResponse').html(topicList);
-						//branchEditable(branchId);
-					}
-
-				});
 
 	}
 
@@ -458,51 +256,8 @@
 		$('#topicId').text(topicId);
 		$('#topicNameHolder').html(topicName);
 		var branchId = $('#branchId').text();
-		$
-				.ajax({
-					url : '${pageContext.request.contextPath}/branch/'
-							+ branchId + '/' + topicId + '/subTopics',
-					type : "GET",
-					success : function(response) {
-						//alert('response'+response);
-						//alert('Branch Name'+branchName);
-						//alert('response length'+response.length);
-						var subTopicList = "<h4>Sub Topics for " + topicName
-								+ "</h4><ol>";
-						for (var i = 0; i < response.length; i++) {
-							subTopicList += '<li><a id="'
-									+ response[i].id
-									+ 'edit" data-type="text" data-name="name" data-pk="'
-									+ response[i].id
-									+ '" data-url="/questionDB/branch/'
-									+ branchId
-									+ '/'
-									+ topicId
-									+ '/subTopic/edit/"   href="javascript:viewConcepts('
-									+ '\''
-									+ response[i].id.replace(/'/g, "\\'")
-									+ '\''
-									+ ','
-									+ '\''
-									+ response[i].name.replace(/'/g, "\\'")
-									+ '\''
-									+ ')">'
-									+ response[i].name
-									+ '</a>'
-									+ '&nbsp;<a href="javascript:makeEditable('
-									+ '\''
-									+ response[i].id.replace(/'/g, "\\'")
-									+ '\''
-									+ ')"><span   class="glyphicon glyphicon-pencil"></span></a>';
-
-						}
-
-						subTopicList += "</ol>";
-						$('#subTopicResponse').html(subTopicList);
-
-					}
-
-				});
+		
+		loadSubTopics(branchId,topicId);
 
 	}
 
@@ -512,37 +267,10 @@
 		$('#subTopicNameHolder').html(subTopicName);
 		var branchId = $('#branchId').text();
 		var topicId = $('#topicId').text();
-		$
-				.ajax({
-					url : '${pageContext.request.contextPath}/branch/'
-							+ branchId + '/' + topicId + '/' + subTopicId
-							+ '/concepts',
-					type : "GET",
-					success : function(response) {
-						//alert('response'+response);
-						//alert('Branch Name'+branchName);
-						//alert('response length'+response.length);
-						var conceptList = "<h4>Concepts for " + subTopicName
-								+ "</h4><ol>";
-						for (var i = 0; i < response.length; i++) {
-							//conceptList += '<li><a href=#>'+response[i].name+'</a>';
-							conceptList += '<li><a id="'+response[i].id+'edit" data-type="text" data-name="name" data-pk="'+response[i].id+'" data-url="/questionDB/branch/'+branchId+'/'+topicId+'/'+subTopicId+'/concept/edit/"   href=#>'
-									+ response[i].name
-									+ '</a>'
-									+ '&nbsp;<a href="javascript:makeEditable('
-									+ '\''
-									+ response[i].id.replace(/'/g, "\\'")
-									+ '\''
-									+ ')"><span   class="glyphicon glyphicon-pencil"></span></a>';
 
-						}
-
-						conceptList += "</ol>";
-						$('#conceptResponse').html(conceptList);
-
-					}
-
-				});
+		
+		loadConcepts(branchId,topicId,subTopicId);
+		
 
 	}
 
@@ -557,18 +285,17 @@
 
 		var top_id = '#' + topicId;
 		$(top_id).editable();
-		//alert('hi');
+
 
 	}
 
 	function makeEditable(id) {
 
 		var id_edit = '#' + id + 'edit';
-		alert(id_edit);
 		$(id_edit).editable({
-			//send: 'never',  
-			//title: 'Enter username',
-			placement : 'right',
+
+			mode:'popup',
+			placement : 'bottom',
 			toggle : 'manual',
 
 		});
@@ -577,14 +304,90 @@
 	}
 	
 	
-	function deleteBranch(id) {
+	function deleteBranch(branchId) {
 
 		alert("Are you sure?");
+		
+		$
+		.ajax({
+			url : '${pageContext.request.contextPath}/branch/delete/'
+					+ branchId,
+			type : "GET",
+			success : function(response) {
+				
+				alert('branch with id'+branchId+'  deleted' );
+				
+				loadBranches();
+			
+				
+			}
+
+		});
 
 	}
 	
+	function deleteTopic(branchId,topicId) {
+
+		alert("Are you sure?");
+		
+		$
+		.ajax({
+			url : '${pageContext.request.contextPath}/branch/'+branchId+'/topic/delete/'+topicId,
+			type : "GET",
+			success : function(response) {
+				
+				alert('topic with id'+topicId+'  deleted' );
+				
+				loadTopics(branchId);
+			
+				
+			}
+
+		});
+
+	}
 	
+	function deleteSubTopic(branchId,topicId,subTopicId) {
+
+		alert("Are you sure?");
+		
+		$
+		.ajax({
+			url : '${pageContext.request.contextPath}/branch/'+branchId+'/'+topicId+'/subTopic/delete/'+subTopicId,
+			type : "GET",
+			success : function(response) {
+				
+				alert('sub topic with id'+subTopicId+'  deleted' );
+				
+				loadSubTopics(branchId,topicId);
+			
+				
+			}
+
+		});
+
+	}
 	
+	function deleteConcept(branchId,topicId,subTopicId,conceptId) {
+
+		alert("Are you sure?");
+		
+		$
+		.ajax({
+			url : '${pageContext.request.contextPath}/branch/'+branchId+'/'+topicId+'/'+subTopicId+'/concept/delete/'+conceptId,
+			type : "GET",
+			success : function(response) {
+				
+				alert('concept with id'+conceptId+'  deleted' );
+				
+				loadConcepts(branchId,topicId,subTopicId);
+			
+				
+			}
+
+		});
+
+	}
 	
 	
 </script>
@@ -650,9 +453,10 @@
 								data-url="/questionDB/branch/update/${branch.id}"
 								href="javascript:viewTopics('${branch.id}','${branch.name}')">${branch.name}</a>&nbsp;<a
 								href="javascript:makeEditable('${branch.id}')"><span
-									class="glyphicon glyphicon-pencil"></span></a>&nbsp;<a
-								href="javascript:deleteBranch('${branch.id}')"><span
-									class="glyphicon glyphicon-pencil"></span></a></li>
+									class="glyphicon glyphicon-pencil"></span></a>&nbsp;
+								<a href="javascript:deleteBranch('${branch.id}')"><span
+									class="glyphicon glyphicon-trash"></span></a>
+							</li>
 						</c:forEach>
 					</ol>
 
@@ -731,7 +535,7 @@
 	</script>
 
 
-	<script src="<c:url value='/static/js/bootstrap.min.js' />"></script>
+	
 	<script src="<c:url value='/static/js/holder.js' />"></script>
 
 </body>

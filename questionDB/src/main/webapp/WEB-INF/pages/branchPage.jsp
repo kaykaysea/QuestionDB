@@ -16,6 +16,8 @@
 	src='<c:url value="/static/js/ckeditor/ckeditor.js" />'></script>
 <script type="text/javascript"
 	src='<c:url value="/static/js/bootstrap-editable.js" />'></script>
+<script type="text/javascript"
+	src='<c:url value="/static/js/util.js" />'></script>	
 <title>Questions Page</title>
 <link href="<c:url value='/static/css/bootstrap.css' />"
 	rel="stylesheet">
@@ -80,11 +82,10 @@ $(document).ready(function(){
 	
 	$('#topicForm').submit(function(event){
 		var name = $('#topicName').val();
-		var topicId = name.replace(/\s/g,'');
+		var topicId = generateUUID()+'t';
 		var json = {"name":name,"id":topicId};
 		var branchId = $('#branchId').text();
-		//alert(branchId);
-		
+				
 		$.ajax({
 			url:'${pageContext.request.contextPath}/branch/'+branchId+'/addTopic',
 			data:JSON.stringify(json),
@@ -122,7 +123,7 @@ $(document).ready(function(){
 	
 	$('#subTopicForm').submit(function(event){
 		var name = $('#subTopicName').val();
-		var subTopicId = name.replace(/\s/g,'');
+		var subTopicId = generateUUID()+'st';
 		var json = {"name":name,"id":subTopicId};
 		var branchId = $('#branchId').text();
 		var topicId = $('#topicId').text();
@@ -167,7 +168,7 @@ $(document).ready(function(){
 	
 	$('#conceptForm').submit(function(event){
 		var conceptName = $('#conceptName').val().replace('\'','&quot');
-		var conceptId = conceptName.replace(/\s/g,'');
+		var conceptId = generateUUID()+'c';
 		var json = {"name":conceptName,"id":conceptId};
 		var branchId = $('#branchId').text();
 		var topicId = $('#topicId').text();

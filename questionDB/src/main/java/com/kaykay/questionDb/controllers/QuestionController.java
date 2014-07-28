@@ -182,7 +182,14 @@ public class QuestionController {
 	}
 	
 	
-	
+	@RequestMapping("search/{searchString}")
+	@ResponseBody
+	public List<Question> searchQuestion(@PathVariable("searchString") String searchTerm){
+		
+		return questionService.getQuestionsBySearchTerm(searchTerm);
+		
+		
+	}
 	
 
 }

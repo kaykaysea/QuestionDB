@@ -219,7 +219,8 @@ public class BranchController {
 			
 		}
 		
-    	topicMap.put(topic.getName().replaceAll(" ",""), topic);
+    	//topicMap.put(topic.getName().replaceAll(" ",""), topic);
+		topicMap.put(topic.getId(), topic);
 
         branch.setTopicList(topicMap);
 		return branchRepository.save(branch);
@@ -246,6 +247,29 @@ public class BranchController {
 		return branchRepository.save(branch);
 	
 	}
+	
+	@RequestMapping(value="{branchId}/topic/delete/{topicId}")
+	@ResponseBody
+	public String deleteTopic(@PathVariable("branchId") String branchId,@PathVariable("topicId") String topicId){
+		
+		Branch branch = branchService.getBranchById(branchId);
+		HashMap<String, Topic> topicMap = new HashMap<String, Topic>();
+		
+		if(branch.getTopicList()!=null){
+			topicMap = branch.getTopicList();
+			
+		}
+		
+	
+    	topicMap.remove(topicId);
+    	
+        branch.setTopicList(topicMap);
+		branchRepository.save(branch);
+		
+		return "topic with id" + topicId + "removed";
+	
+	}
+	
 	
 	
 	@RequestMapping(value="{branchId}/{topicId}/subTopic/edit",method=RequestMethod.POST)
@@ -283,6 +307,42 @@ public class BranchController {
 		
 	}
 	
+	@RequestMapping(value="{branchId}/{topicId}/subTopic/delete/{subTopicId}")
+	@ResponseBody
+	public String deleteSubTopic(@PathVariable("branchId") String branchId,@PathVariable("topicId") String topicId, @PathVariable("subTopicId") String subTopicId){
+		
+		String topicId_dec = "";
+		
+	    try {
+			topicId_dec = URLDecoder.decode(topicId, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	    System.out.println(topicId_dec);
+		
+		Branch branch = branchService.getBranchById(branchId);
+		HashMap<String, Topic> topicMap = branch.getTopicList();
+		HashMap<String, SubTopic> subTopicMap = new HashMap<String, SubTopic>();
+		
+		if(topicMap.get(topicId_dec).getSubTopicList()!=null){
+			subTopicMap = topicMap.get(topicId_dec).getSubTopicList();
+		}
+		
+		
+		subTopicMap.remove(subTopicId);
+		Topic updatedTopic = topicMap.get(topicId_dec);
+		updatedTopic.setSubTopicList(subTopicMap);
+		topicMap.put(topicId, updatedTopic);
+		branch.setTopicList(topicMap);
+		
+	    branchRepository.save(branch);
+	    
+	    return "sub topic with id "+ subTopicId +" deleted";
+		
+		
+	}
+	
+	
 	@RequestMapping(value="{branchId}/{topicId}/addSubTopic",method=RequestMethod.POST)
 	@ResponseBody
 	public Branch addSubTopicToTopic(@PathVariable("branchId") String branchId, @PathVariable("topicId") String topicId, @RequestBody SubTopic subTopic){
@@ -304,7 +364,7 @@ public class BranchController {
 			subTopicMap = topicMap.get(topicId_dec).getSubTopicList();
 		}
 		
-		subTopicMap.put(subTopic.getName().replaceAll(" ", ""), subTopic);
+		subTopicMap.put(subTopic.getId(), subTopic);
 		Topic updatedTopic = topicMap.get(topicId_dec);
 		updatedTopic.setSubTopicList(subTopicMap);
 		topicMap.put(topicId, updatedTopic);
@@ -409,6 +469,53 @@ public class BranchController {
 		
 	}
 	
+	
+	@RequestMapping(value="{branchId}/{topicId}/{subTopicId}/concept/delete/{conceptId}")
+	@ResponseBody
+	public String deleteConcept(@PathVariable("branchId") String branchId,
+									   @PathVariable("topicId") String topicId,
+									   @PathVariable("subTopicId") String subTopicId,
+									   @PathVariable("conceptId") String conceptId){
+		
+		String topicId_dec = "";
+		String subTopicId_dec = "";
+		
+	    try {
+			topicId_dec = URLDecoder.decode(topicId, "UTF-8");
+			subTopicId_dec = URLDecoder.decode(subTopicId, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		
+		Branch branch = branchService.getBranchById(branchId);
+		SubTopic subTopic = branchService.getBranchById(branchId).getTopicList().get(topicId_dec).getSubTopicList().get(subTopicId_dec);
+		
+		HashMap<String,Concept> conceptMap = new HashMap<String, Concept>();
+		
+		if(subTopic.getConceptMap()!=null){
+			conceptMap = subTopic.getConceptMap();
+		}
+		
+
+		
+		conceptMap.remove(conceptId);
+		subTopic.setConceptMap(conceptMap);
+		
+		Topic topic = branchService.getBranchById(branchId).getTopicList().get(topicId_dec);
+		topic.getSubTopicList().put(subTopicId_dec, subTopic);
+		
+		HashMap<String, Topic> topicMap = branch.getTopicList();
+		topicMap.put(topicId_dec, topic);
+
+		branch.setTopicList(topicMap);	
+		
+		
+		branchService.createBranch(branch);
+		
+		return "concept with id "+ conceptId + " deleted";
+		
+	}
 	
 	
 }

@@ -33,6 +33,11 @@ public class QuestionService {
 	}
 	
 	
+	public List<Question> getQuestionsBySearchTerm(String searchTerm){
+		return questionRepository.findByContentRegex(searchTerm);
+	}
+	
+	
 	public Question createQuestion(Question question){
 		question.setId(UUID.randomUUID().toString());
 		return questionRepository.save(question);
