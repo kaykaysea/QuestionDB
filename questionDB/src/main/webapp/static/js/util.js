@@ -49,13 +49,13 @@ function loadBranches(){
 						+ ')">'
 						+ response[i].name
 						+ '</a>&nbsp;'
-						+'<a href="javascript:makeEditable('
+						+'<a  class="editable" href="javascript:makeEditable('
 						+'\''
 						+branchId
 						+'\''
 						+')">'
 						+'<span class="glyphicon glyphicon-pencil"></span></a>&nbsp;'
-						+'<a href="javascript:deleteBranch('
+						+'<a class="editable" href="javascript:deleteBranch('
 						+'\''
 						+branchId
 						+'\''
@@ -107,12 +107,12 @@ function loadTopics(branchId){
 						+ ')">'
 						+ response[i].name
 						+ '</a>'
-						+ '&nbsp;<a href="javascript:makeEditable('
+						+ '&nbsp;<a class="editable" href="javascript:makeEditable('
 						+ '\''
 						+ response[i].id.replace(/'/g, "\\'")
 						+ '\''
 						+ ')"><span   class="glyphicon glyphicon-pencil"></span></a>&nbsp;'
-						+'<a href="javascript:deleteTopic('
+						+'<a class="editable" href="javascript:deleteTopic('
 						+'\''
 						+branchId
 						+'\''
@@ -168,12 +168,12 @@ function loadSubTopics(branchId,topicId){
 						+ ')">'
 						+ response[i].name
 						+ '</a>'
-						+ '&nbsp;<a href="javascript:makeEditable('
+						+ '&nbsp;<a class="editable" href="javascript:makeEditable('
 						+ '\''
 						+ response[i].id.replace(/'/g, "\\'")
 						+ '\''
 						+ ')"><span   class="glyphicon glyphicon-pencil"></span></a>&nbsp;'
-						+'<a href="javascript:deleteSubTopic('
+						+'<a class="editable" href="javascript:deleteSubTopic('
 						+'\''
 						+branchId
 						+'\''
@@ -220,12 +220,12 @@ function loadConcepts(branchId,topicId,subTopicId){
 				conceptList += '<li><a id="'+response[i].id+'edit" data-type="text" data-name="name" data-pk="'+response[i].id+'" data-url="/questionDB/branch/'+branchId+'/'+topicId+'/'+subTopicId+'/concept/edit/"   href=#>'
 						+ response[i].name
 						+ '</a>'
-						+ '&nbsp;<a href="javascript:makeEditable('
+						+ '&nbsp;<a class="editable" href="javascript:makeEditable('
 						+ '\''
 						+ response[i].id.replace(/'/g, "\\'")
 						+ '\''
 						+ ')"><span   class="glyphicon glyphicon-pencil"></span></a>&nbsp;'
-						+'<a href="javascript:deleteConcept('
+						+'<a class="editable" href="javascript:deleteConcept('
 						+'\''
 						+branchId
 						+'\''

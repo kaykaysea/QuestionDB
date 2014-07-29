@@ -238,7 +238,7 @@ $(document).ready(function(){
 							<li><a href=#>Mathematics</a></li>
 						</ul>
 					</li>
-					<li><a href="<c:url value='/branch/new'/>">Configuration</a></li>
+					<li><a href="<c:url value='/branch/edit'/>">Configuration</a></li>
 				</ul>
 
 

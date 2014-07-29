@@ -33,6 +33,8 @@
 	rel="stylesheet">
 <link href="<c:url value='/static/css/bootstrap-editable.css' />"
 	rel="stylesheet">
+<link href="<c:url value='/static/css/custom.css' />"
+	rel="stylesheet">
 
 <script type="text/javascript"
 	src='<c:url value="/static/js/x-edit-main.js" />'></script>
@@ -236,6 +238,22 @@
 											event.preventDefault();
 
 										});
+						
+						$('#editConfig').click(
+								
+								function(event){
+									
+									$( ".editable" ).toggle();
+									
+									
+								}
+					
+						
+						);
+						
+						
+						
+						
 
 					});
 
@@ -421,7 +439,7 @@
 							<li><a href=#>Physics</a></li>
 							<li><a href=#>Mathematics</a></li>
 						</ul></li>
-					<li><a href="<c:url value='/branch/new'/>">Configuration</a></li>
+					<li><a href="<c:url value='/branch/edit'/>">Configuration</a></li>
 				</ul>
 
 
@@ -430,7 +448,12 @@
 		</div>
 	</div>
 
-	<div class="container"></div>
+	<div class="container">
+	<p style="text-align: right;">
+  	 	<button id ="editConfig"type="button" class="btn btn-primary">Edit Mode</button>
+	</p>
+	
+	</div>
 
 	<div class="container ">
 
@@ -452,9 +475,10 @@
 								data-type="text" data-pk='${branch.id}'
 								data-url="/questionDB/branch/update/${branch.id}"
 								href="javascript:viewTopics('${branch.id}','${branch.name}')">${branch.name}</a>&nbsp;<a
+								class="editable"
 								href="javascript:makeEditable('${branch.id}')"><span
 									class="glyphicon glyphicon-pencil"></span></a>&nbsp;
-								<a href="javascript:deleteBranch('${branch.id}')"><span
+								<a class="editable" href="javascript:deleteBranch('${branch.id}')"><span
 									class="glyphicon glyphicon-trash"></span></a>
 							</li>
 						</c:forEach>
