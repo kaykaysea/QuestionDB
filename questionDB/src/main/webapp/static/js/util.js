@@ -49,13 +49,13 @@ function loadBranches(){
 						+ ')">'
 						+ response[i].name
 						+ '</a>&nbsp;'
-						+'<a  class="editable" href="javascript:makeEditable('
+						+'<a  class="editmode" href="javascript:makeEditable('
 						+'\''
 						+branchId
 						+'\''
 						+')">'
 						+'<span class="glyphicon glyphicon-pencil"></span></a>&nbsp;'
-						+'<a class="editable" href="javascript:deleteBranch('
+						+'<a class="editmode" href="javascript:deleteBranch('
 						+'\''
 						+branchId
 						+'\''
@@ -107,12 +107,12 @@ function loadTopics(branchId){
 						+ ')">'
 						+ response[i].name
 						+ '</a>'
-						+ '&nbsp;<a class="editable" href="javascript:makeEditable('
+						+ '&nbsp;<a class="editmode" href="javascript:makeEditable('
 						+ '\''
 						+ response[i].id.replace(/'/g, "\\'")
 						+ '\''
 						+ ')"><span   class="glyphicon glyphicon-pencil"></span></a>&nbsp;'
-						+'<a class="editable" href="javascript:deleteTopic('
+						+'<a class="editmode" href="javascript:deleteTopic('
 						+'\''
 						+branchId
 						+'\''
@@ -168,12 +168,12 @@ function loadSubTopics(branchId,topicId){
 						+ ')">'
 						+ response[i].name
 						+ '</a>'
-						+ '&nbsp;<a class="editable" href="javascript:makeEditable('
+						+ '&nbsp;<a class="editmode" href="javascript:makeEditable('
 						+ '\''
 						+ response[i].id.replace(/'/g, "\\'")
 						+ '\''
 						+ ')"><span   class="glyphicon glyphicon-pencil"></span></a>&nbsp;'
-						+'<a class="editable" href="javascript:deleteSubTopic('
+						+'<a class="editmode" href="javascript:deleteSubTopic('
 						+'\''
 						+branchId
 						+'\''
@@ -220,12 +220,12 @@ function loadConcepts(branchId,topicId,subTopicId){
 				conceptList += '<li><a id="'+response[i].id+'edit" data-type="text" data-name="name" data-pk="'+response[i].id+'" data-url="/questionDB/branch/'+branchId+'/'+topicId+'/'+subTopicId+'/concept/edit/"   href=#>'
 						+ response[i].name
 						+ '</a>'
-						+ '&nbsp;<a class="editable" href="javascript:makeEditable('
+						+ '&nbsp;<a class="editmode" href="javascript:makeEditable('
 						+ '\''
 						+ response[i].id.replace(/'/g, "\\'")
 						+ '\''
 						+ ')"><span   class="glyphicon glyphicon-pencil"></span></a>&nbsp;'
-						+'<a class="editable" href="javascript:deleteConcept('
+						+'<a class="editmode" href="javascript:deleteConcept('
 						+'\''
 						+branchId
 						+'\''
@@ -255,4 +255,60 @@ function loadConcepts(branchId,topicId,subTopicId){
 	
 	
 }
+
+
+function loadQuestions(){
+	
+	var searchText = $('#searchText').val();
+	$
+	.ajax({
+		url : '/questionDB/questions/search/'+searchText,
+		type : "GET",
+		success : function(
+				response) {
+
+			var questions = "";
+			//var branchName = '';
+			for (var i = 1; i < response.length+1; i++) {
+
+				questions += '<div><b>'
+						+i
+						+'. </b>'
+						+response[i-1].content
+						+'<br>(a)'
+						+response[i-1].option1
+						+'<br>(b)'
+						+response[i-1].option2
+						+'<br>(c)'
+						+response[i-1].option3
+						+'<br>(d)'
+						+response[i-1].option4
+						+'<br><br>'
+						+ '<a href="/questionDB/questions/edit/'+response[i-1].id
+						+ '" class="btn btn-primary btn-small active" role="button">Edit </a>&nbsp;'
+						+ '<a href="/questionDB/questions/delete/'+response[i-1].id
+						+ '" class="btn btn-primary btn-small active" role="button">Delete </a>'
+						+'</div><hr><br>';
+						
+						
+
+			}
+			
+			
+			$(
+					'#questionList')
+					.html(
+							questions);
+		}
+	});
+}
+
+
+
+
+
+
+
+
+
 

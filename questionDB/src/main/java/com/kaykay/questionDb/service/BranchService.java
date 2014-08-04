@@ -70,7 +70,7 @@ public class BranchService {
 	public List<Topic> getTopicsListByBranch(String branchName){
 		
 		//assuming that branchName is same as branch Id. works well provided name has no spaces
-		Branch branch = branchRepository.findOne(branchName);
+		Branch branch = branchRepository.findByName(branchName);
 		
 		HashMap<String,Topic> topicsMap = branch.getTopicList();
 		ArrayList<Topic> topicsList = new ArrayList<Topic>();

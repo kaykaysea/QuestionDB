@@ -93,7 +93,7 @@
 				<form:label path="topic"></form:label>
 				<form:select path="topic" id="topic" class="form-control" placeholder="">
 					<form:option value="NONE" label="Select a Topic" />
-					<form:options items="${TOPIC_LIST}" itemValue="name" itemLabel="name" />
+					<form:options items="${TOPIC_LIST}" itemValue="id" itemLabel="name" />
 				</form:select>
 			&nbsp;&nbsp;&nbsp;
 			</div>
@@ -260,7 +260,7 @@
 										
 										var subTopicList = '<option value="">Select a sub topic</option>';
 										for(var i=0;i<response.length;i++){
-											subTopicList += '<option value="' + response[i].name + '">'+ response[i].name + '</option>';
+											subTopicList += '<option value="' + response[i].id + '">'+ response[i].name + '</option>';
 														
 										}
 										
@@ -293,7 +293,7 @@
 									//alert('response length'+response.length);
 									var conceptList = '<option value="">Select a concept</option>';
 									for(var i=0;i<response.length;i++){
-										conceptList += '<option value="' + response[i].name + '">'+ response[i].name + '</option>';
+										conceptList += '<option value="' + response[i].id + '">'+ response[i].name + '</option>';
 													
 									}
 									

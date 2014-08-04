@@ -60,6 +60,12 @@ public class QuestionController {
 		return "questionsPage";
 	}
 	
+	@RequestMapping("search")
+	public String getQuestionsSearchPage(){
+		
+		return "questionSearch";
+	}
+	
 	
 	@RequestMapping("all")
 	@ResponseBody
@@ -138,7 +144,7 @@ public class QuestionController {
 		Question existingQuestion = questionService.getQuestionById(id);
 		model.addAttribute("QUESTION", existingQuestion);
 		model.addAttribute("QUESTION_ID", id);
-		List<Topic> topicList = branchService.getTopicsListByBranch("Physics");
+		List<Topic> topicList = branchService.getTopicsListByBranch(existingQuestion.getSubject());
 		Collections.sort(topicList);
 		
 		model.addAttribute("TOPIC_LIST", topicList);

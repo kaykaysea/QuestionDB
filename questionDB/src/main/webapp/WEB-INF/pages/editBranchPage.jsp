@@ -243,7 +243,7 @@
 								
 								function(event){
 									
-									$( ".editable" ).toggle();
+									$( ".editmode" ).toggle();
 									
 									
 								}
@@ -475,10 +475,10 @@
 								data-type="text" data-pk='${branch.id}'
 								data-url="/questionDB/branch/update/${branch.id}"
 								href="javascript:viewTopics('${branch.id}','${branch.name}')">${branch.name}</a>&nbsp;<a
-								class="editable"
+								class="editmode"
 								href="javascript:makeEditable('${branch.id}')"><span
 									class="glyphicon glyphicon-pencil"></span></a>&nbsp;
-								<a class="editable" href="javascript:deleteBranch('${branch.id}')"><span
+								<a class="editmode" href="javascript:deleteBranch('${branch.id}')"><span
 									class="glyphicon glyphicon-trash"></span></a>
 							</li>
 						</c:forEach>
