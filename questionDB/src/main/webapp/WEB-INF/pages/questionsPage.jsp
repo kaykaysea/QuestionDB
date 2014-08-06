@@ -82,15 +82,15 @@
 		<c:url var="addQ" value="/questions/add" />
 		<form:form method="POST" action="${addQ}" modelAttribute="QUESTION" class="form-inline">
 
-			<b>Subject:</b>
+
+			<b>Branch:</b>
 			<div class="form-group">
 				<form:label path="subject"></form:label>
-				<form:select path="subject" id="subject" class="form-control" placeholder="">
-					<form:option value="NONE" label="Select a Subject" />
-					<form:option value="Physics" label="Physics" />
+				<form:select path="subject" id="branchList" class="form-control" placeholder="">
 				</form:select>
 			&nbsp;&nbsp;&nbsp;
 			</div>
+			
 			<br>
 			
 			
@@ -136,16 +136,7 @@
 			
 			<br>	
 			<b>Key:</b>
-			<!-- <div class="form-group">
-				<form:label path="key"></form:label>
-				<form:select path="key" class="form-control" placeholder="">
-					<form:option value="A" label="A" />
-					<form:option value="B" label="B" />
-					<form:option value="C" label="C" />
-					<form:option value="D" label="D" />
-				</form:select>
-				&nbsp;&nbsp;&nbsp;
-			</div> -->
+	
 			<div class="form-group">
 				<form:label path="key" class="checkbox-inline">
 					<form:checkbox path="key" value="A" />A
@@ -222,8 +213,31 @@
 				.ready(
 						function() {
 							
-							$('#subject').change(function(){
-								var subjectName = $('#subject').val();
+							$.ajax({
+								url:'${pageContext.request.contextPath}/branch/all',
+								type:"GET",
+								success:function(response){
+
+									var branchList = '<option value="">Select a branch</option>';
+									for(var i=0;i<response.length;i++){
+										branchList += '<option value="' + response[i].id + '">'+ response[i].name + '</option>';
+													
+									}
+									
+									//subTopicList+='</option>';
+									$('#branchList').html(branchList);
+									
+								}
+								
+								
+							});
+							
+							
+							
+							
+							
+							$('#branchList').change(function(){
+								var subjectName = $('#branchList').val();
 																			
 								$.ajax({
 									url:'${pageContext.request.contextPath}/branch/'+subjectName+'/topics',
@@ -232,7 +246,7 @@
 
 										var topicList = '<option value="">Select a topic</option>';
 										for(var i=0;i<response.length;i++){
-											topicList += '<option value="' + response[i].name + '">'+ response[i].name + '</option>';
+											topicList += '<option value="' + response[i].id + '">'+ response[i].name + '</option>';
 														
 										}
 										
@@ -251,7 +265,7 @@
 							
 							
 							$('#topic').change(function(){
-								var subjectName = $('#subject').val();
+								var subjectName = $('#branchList').val();
 								var topicName = $('#topic').val();
 								var topicId = topicName.replace(/\s/g,'');
 																											
@@ -277,7 +291,7 @@
 							
 							
 							$('#subTopic').change(function(){
-								var subjectName = $('#subject').val();
+								var subjectName = $('#branchList').val();
 								var topicName = $('#topic').val();
 								var topicId = topicName.replace(/\s/g,'');
 								var subTopicName = $('#subTopic').val();
@@ -289,7 +303,7 @@
 								success:function(response){
 									var conceptList = '<option value="">Select a concept</option>';
 									for(var i=0;i<response.length;i++){
-										conceptList += '<option value="' + response[i].name + '">'+ response[i].name + '</option>';
+										conceptList += '<option value="' + response[i].id + '">'+ response[i].name + '</option>';
 													
 									}
 								

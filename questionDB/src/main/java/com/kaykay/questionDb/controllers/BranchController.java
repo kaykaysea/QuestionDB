@@ -119,8 +119,8 @@ public class BranchController {
 	@ResponseBody
 	public List<Branch> allBranches(){
 		
-		return branchService.getAllBranches();
-		
+		//return branchService.getAllBranches();
+		return branchService.getAllBranchesIds();
 		
 	}
 	

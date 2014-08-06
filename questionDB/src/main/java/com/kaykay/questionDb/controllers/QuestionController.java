@@ -144,15 +144,16 @@ public class QuestionController {
 		Question existingQuestion = questionService.getQuestionById(id);
 		model.addAttribute("QUESTION", existingQuestion);
 		model.addAttribute("QUESTION_ID", id);
-		List<Topic> topicList = branchService.getTopicsListByBranch(existingQuestion.getSubject());
-		Collections.sort(topicList);
+		//List<Topic> topicList = branchService.getTopicsListByBranch(existingQuestion.getSubject());
+		//Collections.sort(topicList);
 		
-		model.addAttribute("TOPIC_LIST", topicList);
+		//model.addAttribute("TOPIC_LIST", topicList);
 		model.addAttribute("CONTENT", existingQuestion.getContent());
 		model.addAttribute("OPTION1",existingQuestion.getOption1());
 		model.addAttribute("OPTION2",existingQuestion.getOption2());
 		model.addAttribute("OPTION3",existingQuestion.getOption3());
 		model.addAttribute("OPTION4",existingQuestion.getOption4());
+		model.addAttribute("SOLUTION",existingQuestion.getSolution());
 		return "editQuestion";
 		
 	}

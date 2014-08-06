@@ -25,15 +25,18 @@ public class BranchService {
 		
 	}
 	
-//	public List<Topic> getTopicsByBranchId(String id){
-//		
-//		return branchRepository.findOne(id).getTopicList();
-//	}
-	
+
 	public List<Branch> getAllBranches(){
 		
 		return branchRepository.findAll();
 	}
+	
+	
+	public List<Branch> getAllBranchesIds(){
+		
+		return branchRepository.getAllBranchesIds();
+	}
+	
 	
 	
 	public Branch createBranch(Branch branch){
@@ -69,7 +72,7 @@ public class BranchService {
 	
 	public List<Topic> getTopicsListByBranch(String branchName){
 		
-		//assuming that branchName is same as branch Id. works well provided name has no spaces
+
 		Branch branch = branchRepository.findByName(branchName);
 		
 		HashMap<String,Topic> topicsMap = branch.getTopicList();

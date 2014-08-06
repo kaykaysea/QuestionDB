@@ -81,12 +81,16 @@
 
 		<c:url var="addQ" value="/questions/updateQuestion" />
 		<form:form method="POST" action="${addQ}" modelAttribute="QUESTION" class="form-inline">
-			<%-- 		<form:label path="topic">Topic:</form:label><form:select items="${TOPIC_LIST}" itemLabel="name" itemValue="name" path="topic"/>&nbsp; --%>
-<!-- 			<div class="form-group"> -->
-<%-- 				<form:label path="topic" class="sr-only">Topic:</form:label> --%>
-<%-- 				<form:input path="topic" class="typeahead form-control" id="topic" --%>
-<%-- 					placeholder="Enter Topic" /> --%>
-<!-- 			</div>&nbsp;&nbsp;&nbsp; -->
+
+			<b>Branch:</b>
+			<div class="form-group">
+				<form:label path="subject"></form:label>
+				<form:select path="subject" id="branchList" class="form-control" placeholder="">
+				</form:select>
+			&nbsp;&nbsp;&nbsp;
+			</div>
+			
+			<br>
 			
 			<b>Topic:</b>
 			<div class="form-group">
@@ -103,8 +107,6 @@
 			<div class="form-group">
 				<form:label path="subTopic"></form:label>
 				<form:select path="subTopic" id="subTopic" class="form-control" >
-<%-- 					<form:option value="NONE" label="--- Select ---" /> --%>
-<%-- 					<form:options items="${TOPIC_LIST}" itemValue="name" itemLabel="name" /> --%>
 				</form:select>
 			&nbsp;&nbsp;&nbsp;
 			</div>
@@ -113,28 +115,13 @@
 			<div class="form-group">
 				<form:label path="conceptsList"></form:label>
 				<form:select path="conceptsList" id="conceptsList" class="form-control">
-<%-- 					<form:option value="NONE" label="--- Select ---" /> --%>
-<%-- 					<form:options items="${TOPIC_LIST}" itemValue="name" itemLabel="name" /> --%>
-				</form:select>
+<				</form:select>
 			&nbsp;&nbsp;&nbsp;
 			</div>
 
 
 
 
-<!-- 			<div class="form-group"> -->
-<%-- 				<form:label path="subTopic" class="sr-only">Sub Topic:</form:label> --%>
-<%-- 				<form:input path="subTopic" class="typeahead form-control" id="subTopic" --%>
-<%-- 					placeholder="Enter Sub Topic" /> --%>
-<!-- 			</div> -->
-<!-- 			&nbsp;&nbsp;&nbsp; -->
-<!-- 			<div class="form-group"> -->
-<%-- 				<form:label path="conceptsList" class="sr-only" >Concepts:</form:label> --%>
-<%-- 				<form:input path="conceptsList" class="typeahead form-control" id="concepts"  --%>
-<%-- 					placeholder="Enter Concepts" /> --%>
-<!-- 			</div> -->
-<!-- 			&nbsp;&nbsp;&nbsp; -->
-			
 			<b>Difficulty:</b>
 			<div class="form-group">
 				<form:label path="difficulty"></form:label>
@@ -151,16 +138,7 @@
 			
 			
 			&nbsp;&nbsp;&nbsp;<b>Key:</b>
-			<!--  <div class="form-group">
-				<form:label path="key"></form:label>
-				<form:select path="key" class="form-control" placeholder="">
-					<form:option value="A" label="A" />
-					<form:option value="B" label="B" />
-					<form:option value="C" label="C" />
-					<form:option value="D" label="D" />
-				</form:select>
-				&nbsp;&nbsp;&nbsp;
-			</div>-->
+
 			<div class="form-group">
 				<form:label path="key" class="checkbox-inline">
 					<form:checkbox path="key" value="A" />A
@@ -224,7 +202,7 @@
 			<br>
 			<label for="solution">Solution</label>
 			<br>
-			<textarea id="solution" name="solution"></textarea>
+			<textarea id="solution" name="solution">${SOLUTION}</textarea>
 			<br>
 			<input type="submit" value="Submit" />
 
@@ -234,38 +212,50 @@
 	</div>
 
 
-
-
-
 	<script type="text/javascript">
 		$(document)
 				.ready(
 						function() {
-
 							
-							$('#topic').change(function(){
-								var topicName = $('#topic').val();
-								var topicId = topicName.replace(/\s/g,'');
-								var branchId = '${subject_string}';
-																				
+							$.ajax({
+								url:'${pageContext.request.contextPath}/branch/all',
+								type:"GET",
+								success:function(response){
+
+									var branchList = '<option value="">Select a branch</option>';
+									for(var i=0;i<response.length;i++){
+										branchList += '<option value="' + response[i].id + '">'+ response[i].name + '</option>';
+													
+									}
+									
+									
+									$('#branchList').html(branchList);
+									
+								}
+								
+								
+							});
+							
+							
+							
+							
+							
+							$('#branchList').change(function(){
+								var subjectName = $('#branchList').val();
+																			
 								$.ajax({
-									url:'${pageContext.request.contextPath}/branch/'+'Physics'+'/'+topicId+'/subTopics',
+									url:'${pageContext.request.contextPath}/branch/'+subjectName+'/topics',
 									type:"GET",
 									success:function(response){
-										//alert('response'+response);
-										//alert('Branch Name'+branchName);
-										//alert('response length'+response.length);
-									
-										
-										
-										var subTopicList = '<option value="">Select a sub topic</option>';
+
+										var topicList = '<option value="">Select a topic</option>';
 										for(var i=0;i<response.length;i++){
-											subTopicList += '<option value="' + response[i].id + '">'+ response[i].name + '</option>';
+											topicList += '<option value="' + response[i].id + '">'+ response[i].name + '</option>';
 														
 										}
 										
 										//subTopicList+='</option>';
-										$('#subTopic').html(subTopicList);
+										$('#topic').html(topicList);
 										
 									}
 									
@@ -278,26 +268,49 @@
 							
 							
 							
+							$('#topic').change(function(){
+								var subjectName = $('#branchList').val();
+								var topicName = $('#topic').val();
+								var topicId = topicName.replace(/\s/g,'');
+																											
+								$.ajax({
+									url:'${pageContext.request.contextPath}/branch/'+subjectName+'/'+topicId+'/subTopics',
+									type:"GET",
+									success:function(response){
+																	
+										var subTopicList = '<option value="">Select a sub topic</option>';
+										for(var i=0;i<response.length;i++){
+											subTopicList += '<option value="' + response[i].id + '">'+ response[i].name + '</option>';
+														
+										}
+										
+										$('#subTopic').html(subTopicList);
+										
+									}
+								
+								});
+							
+							});
+							
+							
+							
 							$('#subTopic').change(function(){
+								var subjectName = $('#branchList').val();
 								var topicName = $('#topic').val();
 								var topicId = topicName.replace(/\s/g,'');
 								var subTopicName = $('#subTopic').val();
 								var subTopicId = subTopicName.replace(/\s/g,'');
 								
 								$.ajax({
-								url:'${pageContext.request.contextPath}/branch/'+'Physics'+'/'+topicId+'/'+subTopicId+'/concepts',
+								url:'${pageContext.request.contextPath}/branch/'+subjectName+'/'+topicId+'/'+subTopicId+'/concepts',
 								type:"GET",
 								success:function(response){
-									//alert('response'+response);
-									//alert('Branch Name'+branchName);
-									//alert('response length'+response.length);
 									var conceptList = '<option value="">Select a concept</option>';
 									for(var i=0;i<response.length;i++){
 										conceptList += '<option value="' + response[i].id + '">'+ response[i].name + '</option>';
 													
 									}
-									
-									
+								
 									$('#conceptsList').html(conceptList);
 									
 									}
@@ -309,26 +322,16 @@
 							});
 							
 							
-							
-
-// 							$('#topic').typeahead( {
-// 								name : 'topics',
-// 								remote : '${pageContext. request. contextPath}/configuration/topicListByName?term=%QUERY',
-// 							} );
-							
-// 							$('#subTopic').typeahead( {
-// 								name : 'subTopics',
-// 								remote : '${pageContext. request. contextPath}/configuration/subTopicListByName?term=%QUERY',
-// 							} );
-						
 							$('#concepts').typeahead( {
 								name : 'concepts',
 								remote : '${pageContext. request. contextPath}/configuration/conceptListByName?term=%QUERY',
 							} );
 						
+							var exams = ["IIT-JEE","BIT-SAT","EAMCET","KCET","AIEEE"];
 							$('#exam').typeahead( {
 								name : 'exams',
-								remote : '${pageContext. request. contextPath}/configuration/examListByName?term=%QUERY',
+								local: exams
+								//remote : '${pageContext. request. contextPath}/configuration/examListByName?term=%QUERY',
 							} );
 							
 							var years = [];
@@ -344,11 +347,11 @@
 							
 							
 						});
-// 		$("#subTopic").focus( function () {
-// 		    //$('#url_title').val('/personal-trainer-directory/'+$(this).val().toLowerCase().replace(/ +/g, '-').trim());
-// 		    alert('inside subtopic');
-// 		});
+
 	</script>
+
+
+
 
 	<script type="text/javascript">
 		CKEDITOR.replace('content');
@@ -368,9 +371,7 @@
 	</script>
 	<script src="<c:url value='/static/js/bootstrap.min.js' />"></script>
 	<script src="<c:url value='/static/js/holder.js' />"></script>
-<!-- 	<script type="text/javascript" -->
-<%-- 		src='<c:url value="/static/js/jquery.js" />'></script> --%>
-<!-- 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script> -->
+
 </body>
 
 
