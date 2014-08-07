@@ -135,7 +135,7 @@ public class QuestionController {
 		
 	
 		questionService.updateQuestion(question);
-		return "questionPage";
+		return "redirect:viewAll";
 	}
 	
 	
