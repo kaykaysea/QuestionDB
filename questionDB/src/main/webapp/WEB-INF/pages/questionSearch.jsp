@@ -112,7 +112,7 @@ $(document)
 
 <body>
 
-	<!-- Top fixed menu start -->
+    <!-- Top fixed menu start -->
 	<div class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
 			<div class="navbar-header">
@@ -125,18 +125,14 @@ $(document)
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
-					<li class="active"><a href="<c:url value='/home'/>">Home</a></li>
-					<li><a href="#about">About</a></li>
-					<li><a href="#contact">Contact</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown">Questions<b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><a href=#>Physics</a></li>
-							<li><a href=#>Mathematics</a></li>
-						</ul></li>
-					<li><a href="<c:url value='/branch/edit'/>">Configuration</a></li>
+			
+					
+					<li><a title="Create Question" href="<c:url value='/questions/create'/>"><span class="glyphicon glyphicon-edit"></span></a></li>
+					<li><a title="View all questions" href="<c:url value='/questions/viewAll'/>"><span class="glyphicon glyphicon-list-alt"></span></a></li>
+					<li><a title="Search questions" href="<c:url value='/questions/search'/>"><span class="glyphicon glyphicon-search"></span></a></li>
+					<li><a title="Configuration" href="<c:url value='/branch/edit'/>"><span class="glyphicon glyphicon-wrench"></span></a></li>
 				</ul>
 
 
@@ -144,6 +140,7 @@ $(document)
 			<!--/.nav-collapse -->
 		</div>
 	</div>
+	 <!-- Top fixed menu end -->
 
 	
 
